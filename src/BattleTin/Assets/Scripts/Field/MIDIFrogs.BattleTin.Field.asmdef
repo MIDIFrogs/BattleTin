@@ -1,7 +1,9 @@
 {
-    "name": "MIDIFrogs.BattleTin.Netcode",
-    "rootNamespace": "MIDIFrogs.BattleTin.Netcode",
-    "references": [],
+    "name": "MIDIFrogs.BattleTin.Field",
+    "rootNamespace": "MIDIFrogs.BattleTin.Field",
+    "references": [
+        "GUID:75469ad4d38634e559750d17036d5f7c"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
