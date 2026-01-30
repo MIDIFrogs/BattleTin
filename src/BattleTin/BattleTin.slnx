@@ -8,10 +8,10 @@
   <Project Path="MackySoft.SerializeReferenceExtensions.csproj" />
   <Project Path="MIDIFrogs.BattleTin.Field.csproj" />
   <Project Path="Assembly-CSharp-firstpass.csproj" />
+  <Project Path="MIDIFrogs.BattleTin.Netcode.csproj" />
   <Project Path="UniTask.TextMeshPro.csproj" />
   <Project Path="MIDIFrogs.BattleTin.Gameplay.csproj" />
   <Project Path="FastScriptReload.Runtime.csproj" />
-  <Project Path="MIDIFrogs.BattleTin.Netcode.csproj" />
   <Project Path="UniTask.Editor.csproj" />
   <Project Path="UniTask.DOTween.csproj" />
   <Project Path="MIDIFrogs.BattleTin.Core.csproj" />
