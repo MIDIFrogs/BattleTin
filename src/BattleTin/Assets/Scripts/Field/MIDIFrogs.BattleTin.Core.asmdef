@@ -1,0 +1,14 @@
+{
+    "name": "MIDIFrogs.BattleTin.Field",
+    "rootNamespace": "MIDIFrogs.BattleTin.Field",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

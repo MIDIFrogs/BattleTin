@@ -1,0 +1,14 @@
+{
+    "name": "MIDIFrogs.BattleTin.Masks",
+    "rootNamespace": "MIDIFrogs.BattleTin.Masks",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
