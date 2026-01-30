@@ -7,21 +7,28 @@ namespace MIDIFrogs.BattleTin.Gameplay.Pieces
     public struct PieceId
     {
         public int Value;
+
+        public PieceId(int value)
+        {
+            Value = value;
+        }
+
+        public static implicit operator PieceId(int pieceId) => new PieceId(pieceId);
     }
 
     [Serializable]
     public class PieceState
     {
         private PieceId id;
-        private int ownerPlayerId;
+        private ulong ownerPlayerId;
         private CellId cell;
         private MaskType mask;
         private int hp;
 
         public PieceId PieceId { get => id; set => id = value; }
-        public int OwnerPlayerId { get => ownerPlayerId; set => ownerPlayerId = value; }
+        public ulong OwnerPlayerId { get => ownerPlayerId; set => ownerPlayerId = value; }
         public MaskType Mask { get => mask; set => mask = value; }
         public int Hp { get => hp; set => hp = value; }
-        internal CellId Cell { get => cell; set => cell = value; }
+        public CellId CellId { get => cell; set => cell = value; }
     }
 }
