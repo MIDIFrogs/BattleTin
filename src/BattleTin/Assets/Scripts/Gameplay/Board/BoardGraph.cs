@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MIDIFrogs.BattleTin.Gameplay.Board
 {
@@ -16,11 +17,43 @@ namespace MIDIFrogs.BattleTin.Gameplay.Board
         public override int GetHashCode() => Value;
         public override bool Equals(object obj)
             => obj is CellId other && other.Value == Value;
+
+        public static implicit operator CellId(int value) => new(value);
+
+        public static bool operator ==(CellId left, CellId right) => left.Equals(right);
+
+        public static bool operator !=(CellId left, CellId right) => !(left == right);
     }
 
     public class BoardGraph
     {
-        private Dictionary<CellId, CellId[]> directConnections = new();
-        private Dictionary<CellId, CellId[]> diagonalConnections = new();
+        private readonly Node[] _nodes;
+
+        public BoardGraph(int size)
+        {
+            _nodes = new Node[size];
+        }
+
+        public void AddConnections(CellId target, IEnumerable<CellId> directConnections, IEnumerable<CellId> diagonalConnections)
+        {
+            _nodes[target.Value] = new Node()
+            {
+                Id = target,
+                DirectConnections = directConnections.ToHashSet(),
+                DiagonalConnections = diagonalConnections.ToHashSet(),
+            };
+        }
+
+        public bool IsDirectConnected(CellId from, CellId to) => _nodes[from.Value].DirectConnections.Contains(to);
+
+        public bool IsDiagonallyConnected(CellId from, CellId to) => _nodes[from.Value].DiagonalConnections.Contains(to);
+
+        private struct Node
+        {
+            public CellId Id;
+
+            public HashSet<CellId> DirectConnections;
+            public HashSet<CellId> DiagonalConnections;
+        }
     }
 }
