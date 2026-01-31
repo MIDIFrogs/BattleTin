@@ -73,6 +73,14 @@ namespace MIDIFrogs.BattleTin.Gameplay.Masks
                     MovementRule = new KingMoveRule(),
                     IsKing = true,
                 },
+
+                [MaskType.Barricade] = new()
+                {
+                    Type = MaskType.Barricade,
+                    MaxHealth = 1,
+                    BaseDamage = 0,
+                    MovementRule = new NoMoveRule(),
+                }
             };
     }
 }
