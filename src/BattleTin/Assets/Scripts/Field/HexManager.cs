@@ -65,7 +65,7 @@ namespace MIDIFrogs.BattleTin.Field
                         TeamId = piece.TeamId,
                         Health = 1,
                         MaxHealth = 1,
-                        Mask = 0,
+                        Mask = piece.IsKing ? MaskType.Captain : MaskType.None,
                     });
                 }
             }

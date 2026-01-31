@@ -5,6 +5,7 @@ using MIDIFrogs.BattleTin.Gameplay.Masks;
 using MIDIFrogs.BattleTin.Gameplay.Orders;
 using MIDIFrogs.BattleTin.Gameplay.Pieces;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace MIDIFrogs.BattleTin.Gameplay
@@ -53,8 +54,9 @@ namespace MIDIFrogs.BattleTin.Gameplay
 
             var virtualHp = aliveUnits.ToDictionary(u => u.PieceId, u => u.Health);
             var attackers = aliveUnits
-                .OrderBy(u => u.LastActionTurn)
-                .ThenBy(u => u.PieceId.Value)
+                .OrderBy(t => !t.IsBarricade)
+                .ThenBy(t => t.LastActionTurn)
+                .ThenBy(t => t.PieceId.Value)
                 .ToList();
 
             var plannedAttacks = new List<PlannedAttack>();
@@ -68,12 +70,14 @@ namespace MIDIFrogs.BattleTin.Gameplay
                     .Where(t =>
                         t.TeamId != attacker.TeamId &&
                         virtualHp[t.PieceId] > 0 &&
+                        CanBeTargeted(t) &&
                         (
                             t.CellId == attacker.CellId ||
                             state.Board.IsDirectConnected(attacker.CellId, t.CellId)
                         )
                     )
-                    .OrderBy(t => t.LastActionTurn)
+                    .OrderBy(t => !t.IsBarricade)
+                    .ThenBy(t => t.LastActionTurn)
                     .ThenBy(t => t.PieceId.Value)
                     .ToList();
 
@@ -97,16 +101,24 @@ namespace MIDIFrogs.BattleTin.Gameplay
                     Damage = damage
                 });
 
+
                 virtualHp[target.PieceId] -= damage;
                 Debug.Log($"Target #{target.PieceId.Value} HP reduced to {virtualHp[target.PieceId]} after attack.");
             }
 
             foreach (var attack in plannedAttacks)
             {
+                if (attack.Damage > 0)
+                {
+                    attack.Attacker.HasDealtDamage = true;
+                }
+
                 attack.Target.Health -= attack.Damage;
 
                 Debug.Log($"Target #{attack.Target.PieceId.Value} final HP after applying damage: {attack.Target.Health}");
             }
+
+            ApplyExplosions(state);
 
             var toRemove = state.Pieces.Values.Where(u => !u.IsAlive).ToList();
 
@@ -131,6 +143,51 @@ namespace MIDIFrogs.BattleTin.Gameplay
             }
         }
 
+        private static void ApplyExplosions(GameState state)
+        {
+            var exploded = new HashSet<PieceId>();
+            bool anyNewExplosion;
+
+            do
+            {
+                anyNewExplosion = false;
+
+                var deadCannoneers = state.Pieces.Values
+                    .Where(p =>
+                        !p.IsAlive &&
+                        p.Mask == MaskType.Cannoneer &&
+                        !exploded.Contains(p.PieceId)
+                    )
+                    .ToList();
+
+                foreach (var cannon in deadCannoneers)
+                {
+                    exploded.Add(cannon.PieceId);
+                    anyNewExplosion = true;
+
+                    var neighbors = state.Pieces.Values
+                        .Where(p =>
+                            p.IsAlive &&
+                            state.Board.IsDirectConnected(cannon.CellId, p.CellId)
+                        );
+
+                    foreach (var target in neighbors)
+                    {
+                        target.Health -= 1;
+                    }
+                }
+
+            } while (anyNewExplosion);
+        }
+
+        private static bool CanBeTargeted(PieceState target)
+        {
+            if (target.Mask == MaskType.Rat && !target.HasDealtDamage)
+                return false;
+
+            return true;
+        }
+
         private static void PerformMoves(GameState state, GameState next, Dictionary<int, int> moveIntents)
         {
             foreach (var kv in moveIntents)
@@ -141,10 +198,35 @@ namespace MIDIFrogs.BattleTin.Gameplay
                 if (!next.Pieces.TryGetValue(pieceId, out var piece))
                     continue;
 
+                if (piece.Mask == MaskType.Carpenter)
+                {
+                    SpawnBarricade(next, piece);
+                }
+
                 piece.CellId = targetCellId;
                 piece.LastActionTurn = state.TurnIndex;
             }
         }
+
+        private static int barricadeIdCounter = -1;
+
+        private static void SpawnBarricade(GameState state, PieceState carpenter)
+        {
+            var barricade = new PieceState
+            {
+                PieceId = new PieceId(barricadeIdCounter--),
+                TeamId = carpenter.TeamId,
+                CellId = carpenter.CellId,
+                Mask = MaskType.Barricade,
+                Health = 1,
+                MaxHealth = 1,
+                LastActionTurn = 0,
+                HasDealtDamage = false
+            };
+
+            state.Pieces[barricade.PieceId.Value] = barricade;
+        }
+
 
         private static int CalculateDamage(PieceState attacker, GameState state)
         {

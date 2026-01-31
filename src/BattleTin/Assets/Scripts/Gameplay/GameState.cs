@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MIDIFrogs.BattleTin.Gameplay.Board;
+using MIDIFrogs.BattleTin.Gameplay.Masks;
 using MIDIFrogs.BattleTin.Gameplay.Pieces;
 
 namespace MIDIFrogs.BattleTin.Gameplay
@@ -23,7 +24,7 @@ namespace MIDIFrogs.BattleTin.Gameplay
             Inventories = inventories.ToDictionary(x => x.TeamId, y => y),
         };
 
-        private GameState(BoardGraph board) => Board = board;
+        public GameState(BoardGraph board) => Board = board;
 
         public GameState Clone()
         {
@@ -47,6 +48,8 @@ namespace MIDIFrogs.BattleTin.Gameplay
             }
             return copy;
         }
+
+        public PieceState GetKing(int teamId) => Pieces.Values.FirstOrDefault(x => x.TeamId == teamId && MaskDatabase.All[x.Mask].IsKing);
 
         public bool IsCellFreeFor(PieceState piece, CellId cell)
         {

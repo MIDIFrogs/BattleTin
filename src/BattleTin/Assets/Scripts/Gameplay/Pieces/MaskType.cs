@@ -17,6 +17,7 @@ namespace MIDIFrogs.BattleTin.Gameplay.Pieces
         Cannoneer,      // Канонир
         Carpenter,
         Captain,
+        Barricade,
 
         // Rainforests set
         // TODO

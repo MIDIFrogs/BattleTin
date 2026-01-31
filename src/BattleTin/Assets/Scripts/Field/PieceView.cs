@@ -6,5 +6,6 @@ namespace MIDIFrogs.BattleTin.Field
     {
         public int PieceId;
         public int TeamId;
+        public bool IsKing;
     }
 }
