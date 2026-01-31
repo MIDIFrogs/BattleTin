@@ -1,4 +1,5 @@
 ﻿using System;
+using Ionic.Zlib;
 using MIDIFrogs.BattleTin.Gameplay;
 using MIDIFrogs.BattleTin.Gameplay.Orders;
 using MIDIFrogs.BattleTin.Netcode;
@@ -75,6 +76,11 @@ namespace MIDIFrogs.BattleTin.Field
             OrderSubmitted(LocalOrder ?? CreatePassOrder());
         }
 
+        public void Surrender()
+        {
+            sync.SurrenderServerRpc(MatchmakingManager.Instance.LocalTeamId);
+        }
+
         /* =========================
          * SERVER EVENTS
          * ========================= */
@@ -146,6 +152,7 @@ namespace MIDIFrogs.BattleTin.Field
             sync.GameState = gameState = TurnResolver.Resolve(gameState, a, b);
             GameStateUpdated(gameState);
             turnAnimator.AnimateDiff(oldState, gameState);
+            turnAnimator.PlayBattle(a, b, oldState, gameState);
 
             TurnFinished(gameState);
         }
