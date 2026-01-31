@@ -9,7 +9,7 @@ public class AudioManager : MonoBehaviour
     [Header("Audio Sources")]
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioSource soundSource;
-    [SerializeField] private AudioSource uiSoundSource; // Отдельный источник для UI
+    [SerializeField] private AudioSource uiSoundSource; 
 
     [Header("Sound Clips")]
     [SerializeField] private AudioClip hoverSound;
@@ -18,7 +18,7 @@ public class AudioManager : MonoBehaviour
     [Header("Audio Settings")]
     [SerializeField] private float defaultSoundVolume = 1f;
     [SerializeField] private float defaultMusicVolume = 0.8f;
-    [SerializeField] private float uiSoundCooldown = 0.1f; // Защита от спама
+    [SerializeField] private float uiSoundCooldown = 0.1f; 
 
     private float soundVolume = 1f;
     private float musicVolume = 0.8f;
@@ -44,7 +44,7 @@ public class AudioManager : MonoBehaviour
     private void Start()
     {
         SetupAudioListeners();
-        PlayMusic(); // Запускаем музыку
+        PlayMusic();
     }
 
     private void LoadAudioSettings()
@@ -93,6 +93,7 @@ public class AudioManager : MonoBehaviour
 
     private void AddSoundToButton(UnityEngine.UI.Button button)
     {
+        if (button.gameObject.tag == "NoSound") return;
         var eventTrigger = button.gameObject.GetComponent<EventTrigger>();
         if (eventTrigger == null)
             eventTrigger = button.gameObject.AddComponent<EventTrigger>();

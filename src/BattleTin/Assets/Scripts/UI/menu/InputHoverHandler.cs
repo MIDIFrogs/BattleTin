@@ -17,8 +17,6 @@ public class InputFieldHoverHandler : MonoBehaviour, IPointerEnterHandler, IPoin
         if (inputField != null && inputField.interactable)
         {
 
-            if (AudioManager.Instance != null)
-                AudioManager.Instance.PlayHoverSound();
         }
     }
 

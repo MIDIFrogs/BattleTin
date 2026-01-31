@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - PlayerUnit
+  - NoSound
   layers:
   - Default
   - TransparentFX
