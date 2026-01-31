@@ -11,7 +11,7 @@ namespace MIDIFrogs.BattleTin.Core
         {
             foreach (var item in dontDestroyOnLoad)
                 DontDestroyOnLoad(item);
-            SceneManager.LoadScene("MainMenu");
+            SceneManager.LoadScene("Main Menu");
         }
     }
 }

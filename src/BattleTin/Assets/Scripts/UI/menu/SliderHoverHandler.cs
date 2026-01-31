@@ -16,8 +16,6 @@ public class SliderHoverHandler : MonoBehaviour, IPointerEnterHandler, IPointerE
         if (slider != null && slider.interactable)
         {
 
-            if (AudioManager.Instance != null)
-                AudioManager.Instance.PlayHoverSound();
         }
     }
 
