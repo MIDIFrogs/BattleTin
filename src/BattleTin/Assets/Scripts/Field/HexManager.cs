@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MIDIFrogs.BattleTin.Core;
@@ -6,7 +7,6 @@ using MIDIFrogs.BattleTin.Gameplay.Board;
 using MIDIFrogs.BattleTin.Gameplay.Orders;
 using MIDIFrogs.BattleTin.Gameplay.Pieces;
 using MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace MIDIFrogs.BattleTin.Field
@@ -17,6 +17,7 @@ namespace MIDIFrogs.BattleTin.Field
 
         public TurnController turnController;
         public TurnAnimator turnAnimator;
+        [SerializeField] MasksInventoryModel maskInventory;
 
         private BoardGraph graph;
         private Hex[] allCells;
@@ -25,6 +26,8 @@ namespace MIDIFrogs.BattleTin.Field
         private PieceView currentSelectedUnit;
         private Hex currentSelectedHex;
         private List<Hex> availableMoveHexes = new List<Hex>();
+
+        public PieceView SelectedPiece => currentSelectedUnit;
 
         void Awake()
         {
@@ -57,13 +60,24 @@ namespace MIDIFrogs.BattleTin.Field
                         CellId = cell.CellId,
                         PieceId = piece.PieceId,
                         TeamId = piece.TeamId,
-                        Hp = 1,
+                        Health = 1,
+                        MaxHealth = 1,
                         Mask = 0,
                     });
                 }
             }
 
-            turnController.InitializeGameState(GameState.Create(pieceStates, graph));
+            List<MaskInventory> inventories = new()
+            {
+                new() { TeamId = 0 },
+                new() { TeamId = 1 },
+            };
+            foreach (var m in maskInventory.MaskCounts)
+            {
+                inventories[0].Counts[m.MaskType] = inventories[1].Counts[m.MaskType] = m.MaskCount;
+            }
+
+            turnController.InitializeGameState(GameState.Create(pieceStates, inventories, graph));
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
         }

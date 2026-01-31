@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MIDIFrogs.BattleTin.Gameplay.Orders;
 using MIDIFrogs.BattleTin.Gameplay.Pieces;
@@ -28,7 +29,11 @@ namespace MIDIFrogs.BattleTin.Gameplay
             // === 2. Применяем перемещения ===
             PerformMoves(state, next, moveIntents);
 
-            // === 3. Проводим симуляцию боя ===
+            // === 3. Меняем маски ===
+            ApplyEquipMask(next, a);
+            ApplyEquipMask(next, b);
+
+            // === 4. Проводим симуляцию боя ===
             SimulateBattle(next);
 
             return next;
@@ -42,10 +47,10 @@ namespace MIDIFrogs.BattleTin.Gameplay
 
             foreach (var unit in aliveUnits)
             {
-                Debug.Log($"Unit #{unit.PieceId.Value}: HP={unit.Hp}, TeamId={unit.TeamId}, CellId={unit.CellId.Value}");
+                Debug.Log($"Unit #{unit.PieceId.Value}: HP={unit.Health}, TeamId={unit.TeamId}, CellId={unit.CellId.Value}");
             }
 
-            var virtualHp = aliveUnits.ToDictionary(u => u.PieceId, u => u.Hp);
+            var virtualHp = aliveUnits.ToDictionary(u => u.PieceId, u => u.Health);
             var attackers = aliveUnits
                 .OrderBy(u => u.LastActionTurn)
                 .ThenBy(u => u.PieceId.Value)
@@ -81,7 +86,7 @@ namespace MIDIFrogs.BattleTin.Gameplay
 
                 Debug.Log($"Simulating attack from #{attacker.PieceId.Value} to #{target.PieceId.Value}");
 
-                int damage = CalculateDamage(attacker, target, state);
+                int damage = CalculateDamage(attacker, state);
                 Debug.Log($"Calculated damage from #{attacker.PieceId.Value} to #{target.PieceId.Value}: {damage}");
 
                 plannedAttacks.Add(new PlannedAttack
@@ -97,9 +102,9 @@ namespace MIDIFrogs.BattleTin.Gameplay
 
             foreach (var attack in plannedAttacks)
             {
-                attack.Target.Hp -= attack.Damage;
+                attack.Target.Health -= attack.Damage;
 
-                Debug.Log($"Target #{attack.Target.PieceId.Value} final HP after applying damage: {attack.Target.Hp}");
+                Debug.Log($"Target #{attack.Target.PieceId.Value} final HP after applying damage: {attack.Target.Health}");
             }
 
             var toRemove = state.Pieces.Values.Where(u => !u.IsAlive).ToList();
@@ -126,16 +131,32 @@ namespace MIDIFrogs.BattleTin.Gameplay
             }
         }
 
-        private static int CalculateDamage(PieceState attacker, PieceState target, GameState state)
+        private static int CalculateDamage(PieceState attacker, GameState state)
         {
-            // TODO:
-            // - учесть маску атакующего
-            // - бафы от союзников
-            // - дебаффы цели
+            int damage = 1;
 
-            return 1;
+            if (attacker.Mask == MaskType.SeaWolf)
+                damage = 2;
+
+            if (attacker.Mask == MaskType.Parrot)
+                damage = 0;
+
+            // Ауры
+            foreach (var ally in state.Pieces.Values)
+            {
+                if (!ally.IsAlive) continue;
+                if (ally.TeamId != attacker.TeamId) continue;
+                if (ally.Mask != MaskType.Cook) continue;
+
+                if (state.Board.IsDirectConnected(ally.CellId, attacker.CellId) ||
+                    state.Board.IsDiagonallyConnected(ally.CellId, attacker.CellId))
+                {
+                    damage += 1;
+                }
+            }
+
+            return damage;
         }
-
 
         private static void CollectMoveIntent(
             GameState state,
@@ -156,6 +177,83 @@ namespace MIDIFrogs.BattleTin.Gameplay
             // последняя запись побеждает (на будущее, если будут сложные эффекты)
             moveIntents[order.PieceId] = order.TargetCellId;
         }
+
+        private static void ApplyEquipMask(
+            GameState state,
+            MoveOrder order
+        )
+        {
+            if (order.Type != OrderType.EquipMask)
+            {
+                Debug.Log($"ApplyEquipMask called with invalid order type: {order.Type}. Expected EquipMask.");
+                return;
+            }
+
+            var piece = state.Pieces[order.PieceId];
+
+            if (piece.TeamId != order.TeamId)
+            {
+                Debug.Log($"Piece ID {order.PieceId} does not belong to team ID {order.TeamId}.");
+                return;
+            }
+
+            var inventory = state.Inventories[order.TeamId];
+
+            if (piece.Mask != MaskType.None)
+            {
+                Debug.Log($"Cannot equip mask to piece ID {order.PieceId} as it already has a mask: {piece.Mask}.");
+                return;
+            }
+
+            if (!inventory.Counts.TryGetValue(order.Mask, out var count) || count <= 0)
+            {
+                Debug.Log($"Inventory for team ID {order.TeamId} does not have any masks of type {order.Mask}.");
+                return;
+            }
+
+            piece.Mask = order.Mask;
+            inventory.Counts[order.Mask]--;
+
+            piece.LastActionTurn = state.TurnIndex;
+
+            ApplyMaskStats(piece);
+            Debug.Log($"Equipped mask {order.Mask} to piece ID {order.PieceId} for team ID {order.TeamId}. Remaining count: {inventory.Counts[order.Mask]}.");
+        }
+
+        private static void ApplyMaskStats(PieceState piece)
+        {
+            switch (piece.Mask)
+            {
+                case MaskType.SeaWolf:
+                    piece.MaxHealth = 2;
+                    piece.Health = Math.Min(piece.Health + 1, 2);
+                    break;
+
+                case MaskType.Cook:
+                    piece.MaxHealth = 2;
+                    piece.Health = Math.Min(piece.Health + 1, 2);
+                    break;
+
+                case MaskType.Rat:
+                    piece.MaxHealth = 1;
+                    break;
+
+                case MaskType.Parrot:
+                    piece.MaxHealth = 3;
+                    piece.Health = Math.Min(piece.Health + 2, 3);
+                    break;
+
+                case MaskType.Cannoneer:
+                    piece.MaxHealth = 1;
+                    break;
+
+                case MaskType.Carpenter:
+                    piece.MaxHealth = 2;
+                    piece.Health = Math.Min(piece.Health + 1, 2);
+                    break;
+            }
+        }
+
 
         private sealed class PlannedAttack
         {
