@@ -72,7 +72,7 @@ namespace MIDIFrogs.BattleTin.Field
                 LocalOrder = CreatePassOrder();
 
             sync.SendOrder(LocalOrder.Value);
-            OrderSubmitted(LocalOrder.Value);
+            OrderSubmitted(LocalOrder ?? CreatePassOrder());
         }
 
         /* =========================
