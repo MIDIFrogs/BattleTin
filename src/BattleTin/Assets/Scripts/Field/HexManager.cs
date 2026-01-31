@@ -16,7 +16,12 @@ namespace MIDIFrogs.BattleTin.Field
     {
         public static HexSelectionManager Instance;
 
-        public TurnController turnController;
+        public MonoBehaviour playerContextBehaviour;
+        private IPlayerContext playerContext;
+
+        public MonoBehaviour turnControllerBehaviour;
+
+        private ITurnController turnController;
         public TurnAnimator turnAnimator;
         [SerializeField] MasksInventoryModel maskInventory;
 
@@ -34,6 +39,19 @@ namespace MIDIFrogs.BattleTin.Field
 
         void Awake()
         {
+            turnController = turnControllerBehaviour.GetComponent<ITurnController>();
+
+            if (turnController == null)
+                Debug.LogError("Assigned controller does not implement ITurnController");
+
+            playerContext = playerContextBehaviour.GetComponent<IPlayerContext>();
+
+            if (playerContext == null)
+                Debug.LogError("Assigned object does not implement IPlayerContext");
+
+
+
+
             allCells = transform.GetComponentsInChildren<Hex>();
             var pieces = transform.GetComponentsInChildren<PieceView>();
             graph = new(allCells.Length);
@@ -105,6 +123,8 @@ namespace MIDIFrogs.BattleTin.Field
 
             if (piece != null)
             {
+                Debug.Log($"Clicked own piece! PieceId: {piece.PieceId}, TeamId: {piece.TeamId}");
+
                 SelectUnit(piece, clickedHex);
                 ShowAvailableMoves(clickedHex);
 
@@ -127,8 +147,8 @@ namespace MIDIFrogs.BattleTin.Field
             ClearSelection();
             currentSelectedUnit = unit;
             currentSelectedHex = hex;
-            hex.GetComponent<Button3DHighlight>().Select(); // Подсветили гекс под фигуркой
-                                                            // Можно добавить эффект на саму фигурку
+            hex.GetComponent<Button3DHighlight>().Select(); // ГЏГ®Г¤Г±ГўГҐГІГЁГ«ГЁ ГЈГҐГЄГ± ГЇГ®Г¤ ГґГЁГЈГіГ°ГЄГ®Г©
+                                                            // ГЊГ®Г¦Г­Г® Г¤Г®ГЎГ ГўГЁГІГј ГЅГґГґГҐГЄГІ Г­Г  Г±Г Г¬Гі ГґГЁГЈГіГ°ГЄГі
             SelectionUpdated(currentSelectedUnit);
         }
 
@@ -159,12 +179,12 @@ namespace MIDIFrogs.BattleTin.Field
             if (currentSelectedUnit == null) return;
 
             turnController.SetLocalOrder(
-                MoveOrder.Move(turnController.TurnIndex, MatchmakingManager.Instance.LocalTeamId, currentSelectedUnit.PieceId, targetHex.CellId)
+                MoveOrder.Move(turnController.TurnIndex, playerContext.LocalTeamId, currentSelectedUnit.PieceId, targetHex.CellId)
             );
 
             currentSelectedHex.GetComponent<Button3DHighlight>().Deselect();
             currentSelectedHex = targetHex;
-            currentSelectedHex.GetComponent<Button3DHighlight>().Select(); // Теперь она выбрана на новом месте
+            currentSelectedHex.GetComponent<Button3DHighlight>().Select(); // Г’ГҐГЇГҐГ°Гј Г®Г­Г  ГўГ»ГЎГ°Г Г­Г  Г­Г  Г­Г®ГўГ®Г¬ Г¬ГҐГ±ГІГҐ
         }
 
         void ClearAvailableMoves()

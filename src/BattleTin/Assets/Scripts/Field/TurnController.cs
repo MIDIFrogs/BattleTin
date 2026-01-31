@@ -4,7 +4,6 @@ using MIDIFrogs.BattleTin.Gameplay;
 using MIDIFrogs.BattleTin.Gameplay.Orders;
 using MIDIFrogs.BattleTin.Netcode;
 using MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace MIDIFrogs.BattleTin.Field
