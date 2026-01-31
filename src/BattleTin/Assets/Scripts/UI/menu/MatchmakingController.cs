@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
-public class MatchmakingManager : MonoBehaviour
+public class MatchmakingController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private IconDisplayManager iconManager;

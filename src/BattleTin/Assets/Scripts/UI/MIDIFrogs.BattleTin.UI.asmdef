@@ -2,7 +2,7 @@
     "name": "MIDIFrogs.BattleTin.UI",
     "rootNamespace": "MIDIFrogs.BattleTin.UI",
     "references": [
-        "GUID:912e59c34d3525c44ab8bfc407250260"
+        "GUID:912e59c34d3525c44ab8bfc407250260",
         "GUID:dc761aad28708e64584cd3f28b1e6ac6",
         "GUID:dff5ed3928156344bab1252a2bd7170c",
         "GUID:10f14e2e934c63741ad26c6bc9edac06",

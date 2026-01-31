@@ -20,7 +20,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject settingsPopup;
     [SerializeField] private GameObject tutorialPopup;
     [SerializeField] private IconDisplayManager iconManager;
-    [SerializeField] private MatchmakingManager matchmakingManager;
+    [SerializeField] private MatchmakingController matchmakingManager;
 
     [Header("Buttons")]
     [SerializeField] private GameObject playButton; 
