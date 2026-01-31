@@ -29,6 +29,8 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
 
         private bool isHost;
 
+        public int LocalTeamId => networkManager.IsHost ? 0 : 1;
+
         void Awake()
         {
             if (Instance != null)

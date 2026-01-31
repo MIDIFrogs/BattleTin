@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using MIDIFrogs.BattleTin.Gameplay.Orders;
+using MIDIFrogs.BattleTin.Gameplay.Pieces;
+using UnityEditor;
+using UnityEngine;
 
 namespace MIDIFrogs.BattleTin.Gameplay
 {
@@ -22,6 +26,82 @@ namespace MIDIFrogs.BattleTin.Gameplay
             CollectMoveIntent(next, b, moveIntents);
 
             // === 2. Применяем перемещения ===
+            PerformMoves(state, next, moveIntents);
+
+            // === 3. Проводим симуляцию боя ===
+            SimulateBattle(state);
+
+            return next;
+        }
+
+        private static void SimulateBattle(GameState state)
+        {
+            var aliveUnits = state.Pieces.Values.Where(u => u.IsAlive).ToList();
+
+            Debug.Log($"Alive units number: {aliveUnits.Count}");
+
+            foreach (var unit in aliveUnits)
+            {
+                Debug.Log($"Unit #{unit.PieceId.Value}: HP={unit.Hp}, TeamId={unit.TeamId}, CellId={unit.CellId}");
+            }
+
+            var virtualHp = aliveUnits.ToDictionary(u => u.PieceId, u => u.Hp);
+            var attackers = aliveUnits
+                .OrderBy(u => u.LastActionTurn)
+                .ThenBy(u => u.PieceId.Value)
+                .ToList();
+
+            var plannedAttacks = new List<PlannedAttack>();
+
+            foreach (var attacker in attackers)
+            {
+                if (virtualHp[attacker.PieceId] <= 0)
+                    continue;
+
+                var targets = aliveUnits
+                    .Where(t =>
+                        t.TeamId != attacker.TeamId &&
+                        virtualHp[t.PieceId] > 0 &&
+                        (
+                            t.CellId == attacker.CellId ||
+                            state.Board.IsDirectConnected(attacker.CellId, t.CellId)
+                        )
+                    )
+                    .OrderBy(t => t.LastActionTurn)
+                    .ThenBy(t => t.PieceId.Value)
+                    .ToList();
+
+                if (targets.Count == 0)
+                    continue;
+
+                var target = targets[0];
+
+                Debug.Log($"Simulating attack from #{attacker.PieceId.Value} to #{target.PieceId.Value}");
+
+                int damage = CalculateDamage(attacker, target, state);
+                plannedAttacks.Add(new PlannedAttack
+                {
+                    Attacker = attacker,
+                    Target = target,
+                    Damage = damage
+                });
+
+                virtualHp[target.PieceId] -= damage;
+            }
+
+            foreach (var attack in plannedAttacks)
+            {
+                attack.Target.Hp -= attack.Damage;
+            }
+
+            var toRemove = state.Pieces.Values.Where(u => !u.IsAlive).ToList();
+
+            foreach (var p in toRemove)
+                state.Pieces.Remove(p.PieceId.Value);
+        }
+
+        private static void PerformMoves(GameState state, GameState next, Dictionary<int, int> moveIntents)
+        {
             foreach (var kv in moveIntents)
             {
                 int pieceId = kv.Key;
@@ -31,12 +111,20 @@ namespace MIDIFrogs.BattleTin.Gameplay
                     continue;
 
                 piece.CellId = targetCellId;
+                piece.LastActionTurn = state.TurnIndex;
             }
-
-            // === 3. Бои будут здесь позже ===
-
-            return next;
         }
+
+        private static int CalculateDamage(PieceState attacker, PieceState target, GameState state)
+        {
+            // TODO:
+            // - учесть маску атакующего
+            // - бафы от союзников
+            // - дебаффы цели
+
+            return 1;
+        }
+
 
         private static void CollectMoveIntent(
             GameState state,
@@ -50,12 +138,19 @@ namespace MIDIFrogs.BattleTin.Gameplay
             if (!state.Pieces.TryGetValue(order.PieceId, out var piece))
                 return;
 
-            //// базовая валидация
-            //if (piece.OwnerPlayerId != order.PlayerId)
-            //    return;
+            // базовая валидация
+            if (piece.TeamId != order.TeamId)
+                return;
 
             // последняя запись побеждает (на будущее, если будут сложные эффекты)
             moveIntents[order.PieceId] = order.TargetCellId;
+        }
+
+        private sealed class PlannedAttack
+        {
+            public PieceState Attacker;
+            public PieceState Target;
+            public int Damage;
         }
     }
 }

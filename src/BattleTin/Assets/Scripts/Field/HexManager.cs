@@ -5,6 +5,7 @@ using MIDIFrogs.BattleTin.Gameplay;
 using MIDIFrogs.BattleTin.Gameplay.Board;
 using MIDIFrogs.BattleTin.Gameplay.Orders;
 using MIDIFrogs.BattleTin.Gameplay.Pieces;
+using MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -55,13 +56,14 @@ namespace MIDIFrogs.BattleTin.Field
                     {
                         CellId = cell.CellId,
                         PieceId = piece.PieceId,
+                        TeamId = piece.TeamId,
                         Hp = 1,
                         Mask = 0,
                     });
                 }
             }
 
-            turnController.InitializeGameState(GameState.Create(pieceStates));
+            turnController.InitializeGameState(GameState.Create(pieceStates, graph));
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
         }
@@ -76,7 +78,7 @@ namespace MIDIFrogs.BattleTin.Field
                 ClearAvailableMoves();
                 return;
             }
-            if (clickedHex.transform.childCount > 0 && clickedHex.transform.GetChild(0).TryGetComponent<PieceView>(out var piece))
+            if (clickedHex.transform.childCount > 0 && clickedHex.transform.GetChild(0).TryGetComponent<PieceView>(out var piece) && piece.TeamId == MatchmakingManager.Instance.LocalTeamId)
             {
                 SelectUnit(piece, clickedHex);
                 ShowAvailableMoves(clickedHex);
@@ -111,7 +113,7 @@ namespace MIDIFrogs.BattleTin.Field
             if (currentSelectedUnit == null) return;
 
             turnController.SetLocalOrder(
-                MoveOrder.Move(turnController.TurnIndex, NetworkManager.Singleton.LocalClientId, currentSelectedUnit.PieceId, targetHex.CellId)
+                MoveOrder.Move(turnController.TurnIndex, MatchmakingManager.Instance.LocalTeamId, currentSelectedUnit.PieceId, targetHex.CellId)
             );
 
             currentSelectedHex.GetComponent<Button3DHighlight>().Deselect();

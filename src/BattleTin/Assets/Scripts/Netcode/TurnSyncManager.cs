@@ -1,5 +1,6 @@
 using System;
 using MIDIFrogs.BattleTin.Gameplay.Orders;
+using MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -25,16 +26,11 @@ namespace MIDIFrogs.BattleTin.Netcode
         [ClientRpc]
         void ReceiveOrderClientRpc(ForceNetworkSerializeByMemcpy<MoveOrder> order)
         {
-            if (order.Value.PlayerId == GetLocalPlayerId())
+            if (order.Value.TeamId == MatchmakingManager.Instance.LocalTeamId)
                 return;
 
             RemoteOrder = order;
             OnRemoteConfirmed(order);
-        }
-
-        ulong GetLocalPlayerId()
-        {
-            return NetworkManager.Singleton.LocalClientId;
         }
     }
 }

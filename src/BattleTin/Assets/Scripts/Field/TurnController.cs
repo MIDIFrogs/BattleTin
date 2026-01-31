@@ -3,6 +3,7 @@ using MIDIFrogs.BattleTin.Core;
 using MIDIFrogs.BattleTin.Gameplay;
 using MIDIFrogs.BattleTin.Gameplay.Orders;
 using MIDIFrogs.BattleTin.Netcode;
+using MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -58,7 +59,7 @@ namespace MIDIFrogs.BattleTin.Field
             Mask = Gameplay.Pieces.MaskType.None,
             PieceId = 0,
             Type = OrderType.Pass,
-            PlayerId = NetworkManager.Singleton.LocalClientId,
+            TeamId = MatchmakingManager.Instance.LocalTeamId,
             TargetCellId = 0,
             TurnIndex = TurnIndex,
         };
