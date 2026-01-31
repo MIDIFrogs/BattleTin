@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MIDIFrogs.BattleTin.Gameplay.Masks;
 using MIDIFrogs.BattleTin.Gameplay.Orders;
 using MIDIFrogs.BattleTin.Gameplay.Pieces;
 using UnityEditor;
@@ -114,6 +115,20 @@ namespace MIDIFrogs.BattleTin.Gameplay
                 state.Pieces.Remove(p.PieceId.Value);
                 Debug.Log($"Removing unit #{p.PieceId.Value} from the field.");
             }
+
+            bool kingDead = toRemove.Any(p => MaskDatabase.All[p.Mask].IsKing);
+
+            if (kingDead)
+            {
+                state.GameOver = true;
+
+                var deadKings = toRemove.Where(p => MaskDatabase.All[p.Mask].IsKing).ToList();
+                if (deadKings.Count > 1)
+                    state.WinnerTeamId = -1; // Ничья
+
+                var king = deadKings[0];
+                state.WinnerTeamId = king.TeamId == 0 ? 1 : 0; // Выигрывает команда-противник короля
+            }
         }
 
         private static void PerformMoves(GameState state, GameState next, Dictionary<int, int> moveIntents)
@@ -170,13 +185,16 @@ namespace MIDIFrogs.BattleTin.Gameplay
             if (!state.Pieces.TryGetValue(order.PieceId, out var piece))
                 return;
 
-            // базовая валидация
             if (piece.TeamId != order.TeamId)
                 return;
 
-            // последняя запись побеждает (на будущее, если будут сложные эффекты)
+            var maskDef = MaskDatabase.All[piece.Mask];
+            if (!maskDef.MovementRule.CanMove(piece, state, order.TargetCellId))
+                return;
+
             moveIntents[order.PieceId] = order.TargetCellId;
         }
+
 
         private static void ApplyEquipMask(
             GameState state,
@@ -222,38 +240,11 @@ namespace MIDIFrogs.BattleTin.Gameplay
 
         private static void ApplyMaskStats(PieceState piece)
         {
-            switch (piece.Mask)
-            {
-                case MaskType.SeaWolf:
-                    piece.MaxHealth = 2;
-                    piece.Health = Math.Min(piece.Health + 1, 2);
-                    break;
+            var newMaxHealth = MaskDatabase.All[piece.Mask].MaxHealth;
 
-                case MaskType.Cook:
-                    piece.MaxHealth = 2;
-                    piece.Health = Math.Min(piece.Health + 1, 2);
-                    break;
-
-                case MaskType.Rat:
-                    piece.MaxHealth = 1;
-                    break;
-
-                case MaskType.Parrot:
-                    piece.MaxHealth = 3;
-                    piece.Health = Math.Min(piece.Health + 2, 3);
-                    break;
-
-                case MaskType.Cannoneer:
-                    piece.MaxHealth = 1;
-                    break;
-
-                case MaskType.Carpenter:
-                    piece.MaxHealth = 2;
-                    piece.Health = Math.Min(piece.Health + 1, 2);
-                    break;
-            }
+            piece.MaxHealth = newMaxHealth;
+            piece.Health = Math.Min(piece.Health + newMaxHealth - 1, newMaxHealth);
         }
-
 
         private sealed class PlannedAttack
         {

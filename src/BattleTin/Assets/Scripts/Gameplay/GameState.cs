@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MIDIFrogs.BattleTin.Gameplay.Board;
@@ -11,6 +12,9 @@ namespace MIDIFrogs.BattleTin.Gameplay
         public Dictionary<int, PieceState> Pieces = new();
         public Dictionary<int, MaskInventory> Inventories = new();
         public readonly BoardGraph Board;
+
+        public bool GameOver;
+        public int WinnerTeamId;
 
         public static GameState Create(List<PieceState> states, List<MaskInventory> inventories, BoardGraph board) => new(board)
         {
@@ -42,6 +46,12 @@ namespace MIDIFrogs.BattleTin.Gameplay
                 };
             }
             return copy;
+        }
+
+        public bool IsCellFreeFor(PieceState piece, CellId cell)
+        {
+            var targetPiece = Pieces.Values.FirstOrDefault(x => x.CellId == cell);
+            return targetPiece == null || targetPiece.TeamId != piece.TeamId;
         }
     }
 }
