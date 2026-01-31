@@ -43,13 +43,6 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
             DontDestroyOnLoad(gameObject);
 
             InitializeServicesAsync().Forget();
-
-            networkManager.OnClientDisconnectCallback += OnClientDisconnected;
-        }
-
-        private void OnClientDisconnected(ulong obj)
-        {
-            throw new NotImplementedException();
         }
 
         private async UniTask InitializeServicesAsync()

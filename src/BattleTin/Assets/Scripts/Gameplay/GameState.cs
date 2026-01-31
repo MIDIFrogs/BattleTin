@@ -23,7 +23,7 @@ namespace MIDIFrogs.BattleTin.Gameplay
             Inventories = inventories.ToDictionary(x => x.TeamId, y => y),
         };
 
-        private GameState(BoardGraph board) => Board = board;
+        public GameState(BoardGraph board) => Board = board;
 
         public GameState Clone()
         {
