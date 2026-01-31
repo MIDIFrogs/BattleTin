@@ -1,7 +1,10 @@
 {
     "name": "MIDIFrogs.BattleTin.UI",
     "rootNamespace": "MIDIFrogs.BattleTin.UI",
-    "references": [],
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:912e59c34d3525c44ab8bfc407250260"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
