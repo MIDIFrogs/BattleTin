@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using MIDIFrogs.BattleTin.Gameplay;
+using MIDIFrogs.BattleTin.Gameplay.Orders;
+using MIDIFrogs.BattleTin.Gameplay.Pieces;
 using UnityEngine;
 
 namespace MIDIFrogs.BattleTin.Field
@@ -12,10 +15,28 @@ namespace MIDIFrogs.BattleTin.Field
 
         private Dictionary<int, PieceView> pieceViews;
 
+        public event Action BattleAnimationStarted = delegate { };
+        public event Action BattleAnimationFinished = delegate { };
+
+        public event Action<PieceState> PieceMoveStarted = delegate { };
+
+
         public void LoadPieceViews(Dictionary<int, PieceView> pieceViews)
         {
             Debug.Log("Piece views were loaded successfully.");
             this.pieceViews = pieceViews;
+        }
+
+        public void PlayBattle(
+            MoveOrder a,
+            MoveOrder b,
+            GameState before,
+            GameState after
+        )
+        {
+            BattleAnimationStarted?.Invoke();
+            // TODO: animate fights
+            BattleAnimationFinished?.Invoke();
         }
 
         public void AnimateDiff(GameState oldState, GameState newState)
@@ -57,6 +78,7 @@ namespace MIDIFrogs.BattleTin.Field
                     var animator = view.GetComponent<Animator>();
 
                     animator?.SetBool("Moving", true);
+                    PieceMoveStarted(newPiece);
 
                     view.transform.DOMove(
                         targetHex.transform.position + Vector3.up * 0.5f,

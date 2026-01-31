@@ -25,15 +25,20 @@ namespace MIDIFrogs.BattleTin.Gameplay.Pieces
         private CellId cell;
         private MaskType mask;
         private int hp;
+        private int maxHp;
         private int lastActionTurn;
+        private bool hasDealtDamage;
 
+        public bool IsAlive => Health > 0;
+        public bool IsBarricade => id.Value < 0;
         public PieceId PieceId { get => id; set => id = value; }
         public int TeamId { get => teamId; set => teamId = value; }
         public MaskType Mask { get => mask; set => mask = value; }
-        public int Hp { get => hp; set => hp = value; }
+        public int Health { get => hp; set => hp = value; }
+        public int MaxHealth { get => maxHp; set => maxHp = value; }
         public CellId CellId { get => cell; set => cell = value; }
         public int LastActionTurn { get => lastActionTurn; set => lastActionTurn = value; }
-        public bool IsAlive => Hp > 0;
+        public bool HasDealtDamage { get => hasDealtDamage; set => hasDealtDamage = value; }
 
         public bool IsMine(int myTeam, PieceState unit)
         {
