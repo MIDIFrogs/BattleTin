@@ -29,7 +29,7 @@ namespace MIDIFrogs.BattleTin.Gameplay
             PerformMoves(state, next, moveIntents);
 
             // === 3. Проводим симуляцию боя ===
-            SimulateBattle(state);
+            SimulateBattle(next);
 
             return next;
         }
@@ -42,7 +42,7 @@ namespace MIDIFrogs.BattleTin.Gameplay
 
             foreach (var unit in aliveUnits)
             {
-                Debug.Log($"Unit #{unit.PieceId.Value}: HP={unit.Hp}, TeamId={unit.TeamId}, CellId={unit.CellId}");
+                Debug.Log($"Unit #{unit.PieceId.Value}: HP={unit.Hp}, TeamId={unit.TeamId}, CellId={unit.CellId.Value}");
             }
 
             var virtualHp = aliveUnits.ToDictionary(u => u.PieceId, u => u.Hp);
@@ -55,8 +55,8 @@ namespace MIDIFrogs.BattleTin.Gameplay
 
             foreach (var attacker in attackers)
             {
-                if (virtualHp[attacker.PieceId] <= 0)
-                    continue;
+                // Log the attacker's state
+                Debug.Log($"Processing attacker #{attacker.PieceId.Value} with HP={virtualHp[attacker.PieceId]}");
 
                 var targets = aliveUnits
                     .Where(t =>
@@ -71,6 +71,9 @@ namespace MIDIFrogs.BattleTin.Gameplay
                     .ThenBy(t => t.PieceId.Value)
                     .ToList();
 
+                // Log target selection information
+                Debug.Log($"Attacker #{attacker.PieceId.Value} found {targets.Count} potential targets.");
+
                 if (targets.Count == 0)
                     continue;
 
@@ -79,6 +82,8 @@ namespace MIDIFrogs.BattleTin.Gameplay
                 Debug.Log($"Simulating attack from #{attacker.PieceId.Value} to #{target.PieceId.Value}");
 
                 int damage = CalculateDamage(attacker, target, state);
+                Debug.Log($"Calculated damage from #{attacker.PieceId.Value} to #{target.PieceId.Value}: {damage}");
+
                 plannedAttacks.Add(new PlannedAttack
                 {
                     Attacker = attacker,
@@ -87,17 +92,23 @@ namespace MIDIFrogs.BattleTin.Gameplay
                 });
 
                 virtualHp[target.PieceId] -= damage;
+                Debug.Log($"Target #{target.PieceId.Value} HP reduced to {virtualHp[target.PieceId]} after attack.");
             }
 
             foreach (var attack in plannedAttacks)
             {
                 attack.Target.Hp -= attack.Damage;
+
+                Debug.Log($"Target #{attack.Target.PieceId.Value} final HP after applying damage: {attack.Target.Hp}");
             }
 
             var toRemove = state.Pieces.Values.Where(u => !u.IsAlive).ToList();
 
             foreach (var p in toRemove)
+            {
                 state.Pieces.Remove(p.PieceId.Value);
+                Debug.Log($"Removing unit #{p.PieceId.Value} from the field.");
+            }
         }
 
         private static void PerformMoves(GameState state, GameState next, Dictionary<int, int> moveIntents)
