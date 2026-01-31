@@ -15,7 +15,12 @@ namespace MIDIFrogs.BattleTin.Field
     {
         public static HexSelectionManager Instance;
 
-        public TurnController turnController;
+        public MonoBehaviour playerContextBehaviour;
+        private IPlayerContext playerContext;
+
+        public MonoBehaviour turnControllerBehaviour;
+
+        private ITurnController turnController;
         public TurnAnimator turnAnimator;
 
         private BoardGraph graph;
@@ -26,8 +31,23 @@ namespace MIDIFrogs.BattleTin.Field
         private Hex currentSelectedHex;
         private List<Hex> availableMoveHexes = new List<Hex>();
 
+        private MoveOrder? pendingOrder;
+
         void Awake()
         {
+            turnController = turnControllerBehaviour.GetComponent<ITurnController>();
+
+            if (turnController == null)
+                Debug.LogError("Assigned controller does not implement ITurnController");
+
+            playerContext = playerContextBehaviour.GetComponent<IPlayerContext>();
+
+            if (playerContext == null)
+                Debug.LogError("Assigned object does not implement IPlayerContext");
+
+
+
+
             allCells = transform.GetComponentsInChildren<Hex>();
             var pieces = transform.GetComponentsInChildren<PieceView>();
             graph = new(allCells.Length);
@@ -78,8 +98,10 @@ namespace MIDIFrogs.BattleTin.Field
                 ClearAvailableMoves();
                 return;
             }
-            if (clickedHex.transform.childCount > 0 && clickedHex.transform.GetChild(0).TryGetComponent<PieceView>(out var piece) && piece.TeamId == MatchmakingManager.Instance.LocalTeamId)
+            if (clickedHex.transform.childCount > 0 && clickedHex.transform.GetChild(0).TryGetComponent<PieceView>(out var piece) && piece.TeamId == playerContext.LocalTeamId)
             {
+                Debug.Log($"Clicked own piece! PieceId: {piece.PieceId}, TeamId: {piece.TeamId}");
+
                 SelectUnit(piece, clickedHex);
                 ShowAvailableMoves(clickedHex);
             }
@@ -105,7 +127,16 @@ namespace MIDIFrogs.BattleTin.Field
 
         void ShowAvailableMoves(Hex fromHex)
         {
-            availableMoveHexes.AddRange(allCells.Where(x => graph.IsDirectConnected(fromHex.CellId, x.CellId)));
+            availableMoveHexes.Clear();
+
+            availableMoveHexes.AddRange(
+                allCells.Where(x => graph.IsDirectConnected(fromHex.CellId, x.CellId))
+            );
+
+            foreach (var hex in availableMoveHexes)
+            {
+                hex.GetComponent<Button3DHighlight>()?.Select();
+            }
         }
 
         void MoveUnitToHex(Hex targetHex)
@@ -113,7 +144,7 @@ namespace MIDIFrogs.BattleTin.Field
             if (currentSelectedUnit == null) return;
 
             turnController.SetLocalOrder(
-                MoveOrder.Move(turnController.TurnIndex, MatchmakingManager.Instance.LocalTeamId, currentSelectedUnit.PieceId, targetHex.CellId)
+                MoveOrder.Move(turnController.TurnIndex, playerContext.LocalTeamId, currentSelectedUnit.PieceId, targetHex.CellId)
             );
 
             currentSelectedHex.GetComponent<Button3DHighlight>().Deselect();

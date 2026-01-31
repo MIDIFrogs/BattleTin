@@ -44,10 +44,28 @@ namespace MIDIFrogs.BattleTin.Field
                     var view = pieceViews[pieceId];
                     var targetHex = HexByCellId(newPiece.CellId.Value);
 
+                    var direction = targetHex.transform.position - view.transform.position;
+                    direction.y = 0; // чтобы не наклонялся вверх/вниз
+
+                    direction = -direction;
+
+                    view.transform
+                    .DORotateQuaternion(Quaternion.LookRotation(direction), 0.2f)
+                    .SetEase(Ease.OutQuad);
+
+
+                    var animator = view.GetComponent<Animator>();
+
+                    animator?.SetBool("Moving", true);
+
                     view.transform.DOMove(
                         targetHex.transform.position + Vector3.up * 0.5f,
                         moveDuration
-                    );
+                    ).OnComplete(() =>
+                    {
+                        animator?.SetBool("Moving", false);
+                    });
+
 
                     view.transform.parent = targetHex.transform;
                 }

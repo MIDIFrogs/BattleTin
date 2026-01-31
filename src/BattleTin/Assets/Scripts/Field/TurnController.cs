@@ -1,10 +1,8 @@
-﻿using System;
-using MIDIFrogs.BattleTin.Core;
+﻿using MIDIFrogs.BattleTin.Core;
 using MIDIFrogs.BattleTin.Gameplay;
 using MIDIFrogs.BattleTin.Gameplay.Orders;
 using MIDIFrogs.BattleTin.Netcode;
 using MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace MIDIFrogs.BattleTin.Field
@@ -12,13 +10,12 @@ namespace MIDIFrogs.BattleTin.Field
     [RequireComponent(typeof(TurnSyncManager))]
     [RequireComponent(typeof(TurnAnimator))]
     [RequireComponent(typeof(Button3DHighlight))]
-    public class TurnController : MonoBehaviour
+    public class TurnController : MonoBehaviour, ITurnController
     {
         private GameState gameState;
         private TurnAnimator turnAnimator;
         private TurnSyncManager turnSyncManager;
         private Button3DHighlight button;
-
 
         public MoveOrder? LocalOrder { get; private set; }
         public TurnPhase Phase { get; private set; }
