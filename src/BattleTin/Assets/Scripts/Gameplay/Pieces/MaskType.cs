@@ -10,11 +10,11 @@ namespace MIDIFrogs.BattleTin.Gameplay.Pieces
         None = 0,
 
         // Pirates set
-        Seawolf,
-        CabinBoy,
-        ShipRat,
-        Parrot,
-        Corsair,
+        SeaWolf,        // Морской волк
+        Cook,           // Кок
+        Rat,            // Корабельная крыса
+        Parrot,         // Попугай
+        Cannoneer,      // Канонир
         Carpenter,
         Captain,
 

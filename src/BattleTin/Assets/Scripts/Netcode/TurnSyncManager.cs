@@ -1,4 +1,6 @@
+using System;
 using MIDIFrogs.BattleTin.Gameplay.Orders;
+using MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -6,20 +8,13 @@ namespace MIDIFrogs.BattleTin.Netcode
 {
     public class TurnSyncManager : NetworkBehaviour
     {
-        private MoveOrder? localOrder;
-        private MoveOrder? remoteOrder;
+        public MoveOrder? RemoteOrder { get; private set; }
 
-        public void SetLocalOrder(MoveOrder order)
+        public event Action<MoveOrder> OnRemoteConfirmed = delegate {};
+
+        public void SendOrder(MoveOrder order)
         {
-            localOrder = order;
-        }
-
-        public void ConfirmTurn()
-        {
-            if (!localOrder.HasValue)
-                return;
-
-            SubmitOrderServerRpc(localOrder.Value);
+            SubmitOrderServerRpc(order);
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
@@ -31,28 +26,11 @@ namespace MIDIFrogs.BattleTin.Netcode
         [ClientRpc]
         void ReceiveOrderClientRpc(ForceNetworkSerializeByMemcpy<MoveOrder> order)
         {
-            if (order.Value.PlayerId == GetLocalPlayerId())
+            if (order.Value.TeamId == MatchmakingManager.Instance.LocalTeamId)
                 return;
 
-            remoteOrder = order;
-            TryResolveTurn();
-        }
-
-        void TryResolveTurn()
-        {
-            if (!localOrder.HasValue || !remoteOrder.HasValue)
-                return;
-
-            // вызов симул€ции
-            Debug.Log("Both orders received, resolving turn");
-
-            localOrder = null;
-            remoteOrder = null;
-        }
-
-        int GetLocalPlayerId()
-        {
-            return (int)NetworkManager.Singleton.LocalClientId;
+            RemoteOrder = order;
+            OnRemoteConfirmed(order);
         }
     }
 }

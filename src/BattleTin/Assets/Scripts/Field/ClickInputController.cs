@@ -1,4 +1,3 @@
-using MIDIFrogs.BattleTin.Field.Assets.Scripts.Field;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,7 +14,7 @@ namespace MIDIFrogs.BattleTin.Field
 
         void Update()
         {
-            if (!Mouse.current.leftButton.isPressed)
+            if (!Mouse.current.leftButton.wasReleasedThisFrame)
                 return;
 
             var mousePosition = Mouse.current.position.ReadValue();
@@ -30,10 +29,11 @@ namespace MIDIFrogs.BattleTin.Field
                 Debug.Log($"Clicked piece {piece.PieceId}");
             }
 
-            if (hit.collider.TryGetComponent<CellView>(out var cell))
-            {
-                Debug.Log($"Clicked cell {cell.CellId}");
-            }
+            //if (hit.collider.TryGetComponent<Hex>(out var cell))
+            //{
+            //    Debug.Log($"Clicked cell {cell.CellId}");
+            //    HexSelectionManager.Instance.OnHexClicked(cell);
+            //}
         }
     }
 }
