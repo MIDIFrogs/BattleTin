@@ -7,6 +7,7 @@ using MIDIFrogs.BattleTin.Gameplay.Pieces;
 
 namespace MIDIFrogs.BattleTin.Gameplay
 {
+    [Serializable]
     public class GameState
     {
         public int TurnIndex;
@@ -43,7 +44,10 @@ namespace MIDIFrogs.BattleTin.Gameplay
                     TeamId = p.TeamId,
                     CellId = p.CellId,
                     Mask = p.Mask,
-                    Health = p.Health
+                    Health = p.Health,
+                    HasDealtDamage = p.HasDealtDamage,
+                    LastActionTurn = p.LastActionTurn,
+                    MaxHealth = p.MaxHealth
                 };
             }
             return copy;

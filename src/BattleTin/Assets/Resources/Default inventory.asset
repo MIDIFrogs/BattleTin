@@ -16,12 +16,12 @@ MonoBehaviour:
   - maskType: 1
     maskCount: 3
   - maskType: 2
-    maskCount: 1
+    maskCount: 3
   - maskType: 3
-    maskCount: 1
+    maskCount: 3
   - maskType: 4
-    maskCount: 1
+    maskCount: 3
   - maskType: 5
-    maskCount: 2
+    maskCount: 3
   - maskType: 6
-    maskCount: 1
+    maskCount: 3

@@ -25,7 +25,7 @@ namespace MIDIFrogs.BattleTin.Field
 
         private BoardGraph graph;
         private Hex[] allCells;
-        private PieceView[] allPieces;
+        private List<PieceView> allPieces;
 
         private PieceView currentSelectedUnit;
         private Hex currentSelectedHex;
@@ -43,7 +43,7 @@ namespace MIDIFrogs.BattleTin.Field
                 Debug.LogError("Assigned object does not implement IPlayerContext");
 
             allCells = transform.GetComponentsInChildren<Hex>();
-            allPieces = transform.GetComponentsInChildren<PieceView>();
+            allPieces = transform.GetComponentsInChildren<PieceView>().ToList();
             graph = new(allCells.Length);
             int index = 0;
             foreach (var cell in allCells)
@@ -99,8 +99,10 @@ namespace MIDIFrogs.BattleTin.Field
 
         private void OnGameStateUpdated(GameState obj)
         {
-            foreach (var m in allPieces)
+            for (int i = allPieces.Count - 1; i >= 0; i--)
             {
+                PieceView m = allPieces[i];
+                if (!obj.Pieces.ContainsKey(m.PieceId)) allPieces.RemoveAt(i);
                 m.SetMask(obj.Pieces[m.PieceId].Mask);
             }
         }

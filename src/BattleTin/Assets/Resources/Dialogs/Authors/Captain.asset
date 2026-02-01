@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 33a61192-0e01-4635-836f-a515db378367
   authorName: "\u041A\u0430\u043F\u0438\u0442\u0430\u043D \u0416\u0430\u043A \u0413\u043E\u043B\u0443\u0431\u0435\u0439"
-  signColor: {r: 1, g: 0.5235849, b: 0.5235849, a: 1}
-  avatar: {fileID: 21300000, guid: 2c72ccad90366e643869856b81b548d6, type: 3}
+  signColor: {r: 1, g: 0.7137255, b: 0.39215687, a: 1}
+  avatar: {fileID: 21300000, guid: b0fba878f2ae1ae43ab20b9f871b303f, type: 3}

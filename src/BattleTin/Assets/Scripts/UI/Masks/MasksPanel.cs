@@ -1,6 +1,5 @@
 ﻿using MIDIFrogs.BattleTin.Field;
 using MIDIFrogs.BattleTin.Gameplay;
-using MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode;
 using UnityEngine;
 
 namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI.Masks
@@ -10,10 +9,14 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI.Masks
         [SerializeField] private TurnControllerBase turnController;
         [SerializeField] private HexSelectionManager hexManager;
         [SerializeField] private MaskSelectionUI selectionUI;
+        [SerializeField] private GameObject playerContext;
+
+        private int teamId;
 
         private void Awake()
         {
-            turnController.TurnFinished += s => UpdateView(s.Inventories[MatchmakingManager.Instance.LocalTeamId]);
+            teamId = playerContext.GetComponent<IPlayerContext>().LocalTeamId;
+            turnController.TurnFinished += s => UpdateView(s.Inventories[teamId]);
         }
 
         public void UpdateView(MaskInventory inventory)
@@ -29,6 +32,7 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI.Masks
                 var card = Instantiate(selectionUI, transform);
                 card.turnController = turnController;
                 card.hexManager = hexManager;
+                card.teamId = teamId;
                 card.UpdateMaskView(p.Key, p.Value);
             }
         }
