@@ -47,9 +47,14 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
 
         private async UniTask InitializeServicesAsync()
         {
+            Debug.Log("Initializing Unity Services");
             await UnityServices.InitializeAsync();
             if (!AuthenticationService.Instance.IsSignedIn)
+            {
+                Debug.Log("Signing in anonymously");
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            }
+            Debug.Log("Unity Services Initialized");
         }
 
         // === PUBLIC API ===
@@ -57,8 +62,12 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
         public void QuickMatch()
         {
             if (isSearching)
+            {
+                Debug.Log("Already searching for a match");
                 return;
+            }
 
+            Debug.Log("Starting Quick Match");
             matchmakingCts = new CancellationTokenSource();
             QuickMatchAsync(matchmakingCts.Token).Forget();
         }
@@ -66,6 +75,7 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
         private async UniTask QuickMatchAsync(CancellationToken token)
         {
             isSearching = true;
+            Debug.Log("Searching for available lobbies");
 
             // === QUERY LOBBIES ===
             var queryOptions = new QueryLobbiesOptions
@@ -82,12 +92,12 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
             };
 
             var result = await LobbyService.Instance.QueryLobbiesAsync(queryOptions);
-
             token.ThrowIfCancellationRequested();
 
             if (result.Results.Count > 0)
             {
                 // === JOIN ===
+                Debug.Log($"Joining lobby: {result.Results[0].Id}");
                 currentLobby = await LobbyService.Instance.JoinLobbyByIdAsync(result.Results[0].Id);
                 isHost = false;
 
@@ -96,6 +106,7 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
             else
             {
                 // === CREATE ===
+                Debug.Log("No available lobbies, creating a new lobby");
                 var options = new CreateLobbyOptions
                 {
                     Data = new Dictionary<string, DataObject>
@@ -114,6 +125,7 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
 
         private async UniTask HostWaitForClientAsync(CancellationToken token)
         {
+            Debug.Log("Waiting for client to join");
             while (currentLobby.Players.Count < 2)
             {
                 token.ThrowIfCancellationRequested();
@@ -122,6 +134,7 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
             }
 
             // === RELAY ===
+            Debug.Log("Creating Relay allocation");
             var allocation = await RelayService.Instance.CreateAllocationAsync(1);
             var joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
 
@@ -142,6 +155,7 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
                 }
             };
 
+            Debug.Log("Updating lobby with join code");
             await LobbyService.Instance.UpdateLobbyAsync(currentLobby.Id, updateOptions);
 
             networkManager.StartHost();
@@ -150,6 +164,7 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
 
         private async UniTask ClientWaitForRelayAsync(CancellationToken token)
         {
+            Debug.Log("Client waiting for relay to be started");
             while (true)
             {
                 token.ThrowIfCancellationRequested();
@@ -162,9 +177,9 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
             }
 
             var joinCode = currentLobby.Data[RELAY_CODE_KEY].Value;
+            Debug.Log($"Joining allocation with join code: {joinCode}");
 
             var allocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
-
             transport.SetRelayServerData(
                 allocation.RelayServer.IpV4,
                 (ushort)allocation.RelayServer.Port,
@@ -177,9 +192,9 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
             networkManager.StartClient();
         }
 
-
         private void LoadBattleScene()
         {
+            Debug.Log("Loading battle scene");
             networkManager.SceneManager.LoadScene(
                 "Game",
                 UnityEngine.SceneManagement.LoadSceneMode.Single
@@ -188,6 +203,7 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
 
         public async UniTask LeaveMatchAsync()
         {
+            Debug.Log("Leaving match");
             matchmakingCts?.Cancel();
 
             if (networkManager.IsListening)
@@ -201,8 +217,12 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
                         currentLobby.Id,
                         AuthenticationService.Instance.PlayerId
                     );
+                    Debug.Log("Player removed from lobby");
                 }
-                catch { }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Error while removing player from lobby: {e}");
+                }
 
                 currentLobby = null;
             }
@@ -215,8 +235,12 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
             try
             {
                 if (!AuthenticationService.Instance.IsSignedIn)
+                {
+                    Debug.Log("Checking sign-in status - signing in anonymously");
                     await AuthenticationService.Instance.SignInAnonymouslyAsync();
+                }
 
+                Debug.Log("Connection check successful");
                 return true;
             }
             catch (Exception e)
@@ -229,8 +253,12 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
         public async UniTask CancelMatchmakingAsync()
         {
             if (!isSearching)
+            {
+                Debug.Log("Matchmaking was not in progress");
                 return;
+            }
 
+            Debug.Log("Cancelling matchmaking");
             matchmakingCts?.Cancel();
             matchmakingCts?.Dispose();
             matchmakingCts = null;
@@ -245,8 +273,12 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
                         currentLobby.Id,
                         AuthenticationService.Instance.PlayerId
                     );
+                    Debug.Log("Player removed from lobby after cancelling matchmaking");
                 }
-                catch { }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Error while removing player from lobby: {e}");
+                }
 
                 currentLobby = null;
             }

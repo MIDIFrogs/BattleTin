@@ -37,6 +37,13 @@ namespace MIDIFrogs.BattleTin.Field
 
         void Awake()
         {
+            if (Instance == null) Instance = this;
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             playerContext = playerContextBehaviour.GetComponent<IPlayerContext>();
 
             if (playerContext == null)
@@ -89,8 +96,6 @@ namespace MIDIFrogs.BattleTin.Field
             }
 
             turnController.InitializeGameState(GameState.Create(pieceStates, inventories, graph));
-            if (Instance == null) Instance = this;
-            else Destroy(gameObject);
 
             turnController.GameStateUpdated += OnGameStateUpdated;
 
@@ -211,6 +216,7 @@ namespace MIDIFrogs.BattleTin.Field
             if (currentSelectedHex != null) currentSelectedHex.GetComponent<Button3DHighlight>().Deselect();
             currentSelectedUnit = null;
             currentSelectedHex = null;
+            SelectionUpdated(null);
             ClearAvailableMoves();
         }
     }

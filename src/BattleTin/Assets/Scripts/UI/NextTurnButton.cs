@@ -17,10 +17,10 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI
             button = GetComponent<Button>();
             button.onClick.AddListener(OnClicked);
 
-            turnController.OrderSubmitted += s => button.enabled = false;
+            turnController.OrderSubmitted += s => button.interactable = false;
             turnController.TurnFinished += s =>
             {
-                button.enabled = true;
+                button.interactable = true;
             };
         }
 

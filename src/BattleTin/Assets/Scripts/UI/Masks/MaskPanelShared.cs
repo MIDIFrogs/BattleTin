@@ -17,6 +17,7 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI.Masks
         [Header("Control")]
         [SerializeField] private TurnControllerBase turnController;
         [SerializeField] private HexSelectionManager hexManager;
+        [SerializeField] private GameObject playerContext;
 
         [Header("UI")]
         [SerializeField] private Image background;
@@ -61,7 +62,7 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI.Masks
             turnController.SetLocalOrder(
                 MoveOrder.EquipMask(
                     turn: turnController.TurnIndex,
-                    teamId: MatchmakingManager.Instance.LocalTeamId,
+                    teamId: playerContext.GetComponent<IPlayerContext>().LocalTeamId,
                     pieceId: hexManager.SelectedPiece.PieceId,
                     mask: SelectedMask
                 )

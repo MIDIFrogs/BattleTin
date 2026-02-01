@@ -25,12 +25,13 @@ namespace MIDIFrogs.BattleTin.Field
 
         public override void InitializeGameState(GameState initialState)
         {
-            sync.GameState = GameState = initialState;
+            GameState = initialState;
         }
 
         private void Awake()
         {
             sync = GetComponent<TurnSyncManager>();
+            sync.GameState = GameState;
             turnAnimator = GetComponent<TurnAnimator>();
             SetupAnimator(turnAnimator);
 

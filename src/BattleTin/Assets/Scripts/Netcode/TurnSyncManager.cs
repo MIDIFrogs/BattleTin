@@ -127,6 +127,8 @@ namespace MIDIFrogs.BattleTin.Netcode
 
         private void SendHeartbeat()
         {
+            if (GameState == null) return;
+
             int stateHash = GameStateHasher.Compute(GameState);
 
             float timeLeft = Mathf.Max(0, turnDeadline - Time.time);

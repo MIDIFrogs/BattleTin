@@ -59,7 +59,7 @@ namespace MIDIFrogs.BattleTin.Field
             animator.SetPieceViewFactory(x =>
             {
                 var v = Instantiate(piecePrefab);
-                v.PieceId = x.PieceId.Value;
+                v.PieceId = x.PieceId.Value;    
                 v.IsKing = MaskDatabase.All[x.Mask].IsKing;
                 v.TeamId = x.TeamId;
                 return v;

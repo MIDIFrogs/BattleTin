@@ -7,11 +7,10 @@ using MIDIFrogs.BattleTin.Gameplay.Pieces;
 
 namespace MIDIFrogs.BattleTin.Gameplay
 {
-    [Serializable]
     public class GameState
     {
         public int TurnIndex;
-        public Dictionary<int, PieceState> Pieces = new();
+        public Dictionary<int, PieceState> Pieces { get; private set; } = new();
         public Dictionary<int, MaskInventory> Inventories = new();
         public readonly BoardGraph Board;
 

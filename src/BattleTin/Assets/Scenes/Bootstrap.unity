@@ -317,6 +317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroyOnLoad:
   - {fileID: 899021193}
+  - {fileID: 1766383571}
 --- !u!4 &1296451740
 Transform:
   m_ObjectHideFlags: 0
@@ -389,7 +390,7 @@ MonoBehaviour:
   ConnectionData:
     Address: 127.0.0.1
     Port: 7777
-    ServerListenAddress: 127.0.0.1
+    ServerListenAddress: 0.0.0.0
     ClientBindPort: 0
   DebugSimulator:
     PacketDelayMS: 0
@@ -437,7 +438,7 @@ MonoBehaviour:
     NetworkProfilingMetrics: 1
     OldPrefabList: []
   RunInBackground: 1
-  LogLevel: 1
+  LogLevel: 0
 --- !u!1 &2078413990
 GameObject:
   m_ObjectHideFlags: 0

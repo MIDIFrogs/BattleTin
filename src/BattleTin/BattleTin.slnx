@@ -4,6 +4,7 @@
   <Project Path="UniTask.csproj" />
   <Project Path="MIDIFrogs.Dialogs.csproj" />
   <Project Path="MIDIFrogs.BattleTin.UI.csproj" />
+  <Project Path="MIDIFrogs.BattleTin.Core.csproj" />
   <Project Path="UniTask.Linq.csproj" />
   <Project Path="MackySoft.SerializeReferenceExtensions.Tests.Editor.csproj" />
   <Project Path="MIDIFrogs.BattleTin.Field.csproj" />
@@ -16,7 +17,6 @@
   <Project Path="MIDIFrogs.BattleTin.Netcode.csproj" />
   <Project Path="UniTask.TextMeshPro.csproj" />
   <Project Path="FastScriptReload.Runtime.csproj" />
-  <Project Path="MIDIFrogs.BattleTin.Core.csproj" />
   <Project Path="UniTask.Editor.csproj" />
   <Project Path="UniTask.DOTween.csproj" />
 </Solution>

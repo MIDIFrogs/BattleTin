@@ -9,8 +9,8 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI
     {
         public void OnClick()
         {
+            SceneManager.LoadScene("Main Menu");
             MatchmakingManager.Instance.LeaveMatchAsync().Forget();
-            SceneManager.LoadScene("MainMenu");
         }
     }
 }

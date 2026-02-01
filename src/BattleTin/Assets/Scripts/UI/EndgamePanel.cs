@@ -10,6 +10,7 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI
         public TMP_Text verdictText;
         public TurnControllerBase turnController;
         public GameObject panel;
+        public GameObject playerContext;
 
         private void Awake()
         {
@@ -21,7 +22,7 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI
             if (state.GameOver)
             {
                 panel.SetActive(true);
-                verdictText.text = state.WinnerTeamId == MatchmakingManager.Instance.LocalTeamId ? "You won!" : "You lost";
+                verdictText.text = state.WinnerTeamId == playerContext.GetComponent<IPlayerContext>().LocalTeamId ? "You won!" : "You lost";
             }
         }
     }

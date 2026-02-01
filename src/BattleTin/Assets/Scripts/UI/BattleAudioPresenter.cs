@@ -10,9 +10,10 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI
     public class BattleAudioPresenter : MonoBehaviour
     {
         [SerializeField] private BattleAudioManager audioManager;
-        [SerializeField] private TurnController turnController;
+        [SerializeField] private TurnControllerBase turnController;
         [SerializeField] private TurnAnimator turnAnimator;
         [SerializeField] private HexSelectionManager hexManager;
+        [SerializeField] private GameObject playerContext;
 
         private int initialUnitCount;
         private bool played25;
@@ -92,23 +93,23 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI
             int killed = initialUnitCount - alive;
             float killedRatio = (float)killed / initialUnitCount;
 
-            //if (!played25 && killedRatio >= 0.25f)
-            //{
-            //    played25 = true;
-            //    audioManager.PlayThemeBattleSecond();
-            //}
+            if (!played25 && killedRatio >= 0.25f)
+            {
+                played25 = true;
+                audioManager.PlayThemeBattleSecond();
+            }
 
-            //if (!played50 && killedRatio >= 0.5f)
-            //{
-            //    played50 = true;
-            //    audioManager.PlayThemeBattleThird();
-            //}
+            if (!played50 && killedRatio >= 0.5f)
+            {
+                played50 = true;
+                audioManager.PlayThemeBattleThird();
+            }
 
             if (state.GameOver && !gameOverHandled)
             {
                 gameOverHandled = true;
 
-                if (state.WinnerTeamId == MatchmakingManager.Instance.LocalTeamId)
+                if (state.WinnerTeamId == playerContext.GetComponent<IPlayerContext>().LocalTeamId)
                 {
                     audioManager.PlayResultWin();
                     audioManager.PlayBattleWinningSoundEnd();
