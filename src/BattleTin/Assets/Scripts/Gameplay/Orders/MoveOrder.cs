@@ -23,6 +23,15 @@ namespace MIDIFrogs.BattleTin.Gameplay.Orders
             TargetCellId = cellId
         };
 
+        public static MoveOrder EquipMask(int turn, int teamId, int pieceId, MaskType mask) => new()
+        {
+            TurnIndex = turn,
+            TeamId = teamId,
+            PieceId = pieceId,
+            Type = OrderType.EquipMask,
+            Mask = mask,
+        };
+
         public bool Equals(MoveOrder other) =>
             TurnIndex == other.TurnIndex &&
             TeamId == other.TeamId &&
@@ -36,6 +45,11 @@ namespace MIDIFrogs.BattleTin.Gameplay.Orders
         public override readonly int GetHashCode()
         {
             return HashCode.Combine(TurnIndex, TeamId, PieceId, Type, TargetCellId, Mask);
+        }
+
+        public override string ToString()
+        {
+            return $"MoveOrder: [TurnIndex: {TurnIndex}, TeamId: {TeamId}, PieceId: {PieceId}, Type: {Type}, TargetCellId: {TargetCellId}, Mask: {Mask}]";
         }
     }
 }

@@ -69,7 +69,7 @@ public class BattleAudioManager : MonoBehaviour
     [SerializeField] private float pickUpCooldown = 0.1f;
     [SerializeField] private float walkCooldown = 0.2f;
 
-    // Громкости из настроек (будут получаться из SettingsManager)
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ SettingsManager)
     private float soundVolume = 1f;
     private float musicVolume = 0.8f;
     private bool isInitialized = false;
@@ -88,7 +88,7 @@ public class BattleAudioManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             InitializeDictionaries();
 
-            // Загружаем настройки при инициализации
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             LoadAudioSettings();
             isInitialized = true;
         }
@@ -105,20 +105,20 @@ public class BattleAudioManager : MonoBehaviour
 
     private void LoadAudioSettings()
     {
-        // ВАЖНО: Если SettingsManager существует, используем его настройки
+        // пїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅ SettingsManager пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         if (SettingsManager.Instance != null)
         {
-            // Используем SettingsManager как основной источник настроек
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ SettingsManager пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             soundVolume = SettingsManager.Instance.SoundVolume;
             musicVolume = SettingsManager.Instance.MusicVolume;
         }
         else
         {
-            // Fallback на PlayerPrefs если SettingsManager нет
+            // Fallback пїЅпїЅ PlayerPrefs пїЅпїЅпїЅпїЅ SettingsManager пїЅпїЅпїЅ
             soundVolume = PlayerPrefs.GetFloat("SoundVolume", defaultSoundVolume);
             musicVolume = PlayerPrefs.GetFloat("MusicVolume", defaultMusicVolume);
 
-            Debug.LogWarning("SettingsManager не найден. Использую PlayerPrefs для настроек аудио.");
+            Debug.LogWarning("SettingsManager пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ PlayerPrefs пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.");
         }
     }
 
@@ -153,15 +153,15 @@ public class BattleAudioManager : MonoBehaviour
     {
         if (!isInitialized) return;
 
-        // Применяем громкости к каждому AudioSource
-        // Источники музыки
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ AudioSource
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         if (themeBattleSecondAudioSource != null)
             themeBattleSecondAudioSource.volume = musicVolume;
 
         if (themeBattleThirdAudioSource != null)
             themeBattleThirdAudioSource.volume = musicVolume;
 
-        // Источники звуков (SFX)
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (SFX)
         if (matchResultAudioSource != null)
             matchResultAudioSource.volume = soundVolume;
 
@@ -184,31 +184,31 @@ public class BattleAudioManager : MonoBehaviour
             clickButtonAudioSource.volume = soundVolume;
     }
 
-    // === МЕТОД ДЛЯ ВОСПРОИЗВЕДЕНИЯ С УЧЕТОМ НАСТРОЕК ===
+    // === пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ===
 
     /// <summary>
-    /// Основной метод для воспроизведения звуков с учетом настроек громкости
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    /// <param name="type">Тип звука (Sound или Music)</param>
-    /// <param name="audioSource">AudioSource для воспроизведения</param>
-    /// <param name="clip">Аудиоклип</param>
-    /// <param name="volumeMultiplier">Множитель громкости (от 0 до 1)</param>
-    /// <param name="loop">Зациклить ли звук</param>
+    /// <param name="type">пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ (Sound пїЅпїЅпїЅ Music)</param>
+    /// <param name="audioSource">AudioSource пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</param>
+    /// <param name="clip">пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</param>
+    /// <param name="volumeMultiplier">пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅ 0 пїЅпїЅ 1)</param>
+    /// <param name="loop">пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ</param>
     public void PlayWithSetting(AudioType type, AudioSource audioSource, AudioClip clip, float volumeMultiplier = 1f, bool loop = false)
     {
         if (!isInitialized || audioSource == null || clip == null) return;
 
-        // Определяем базовую громкость в зависимости от типа
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ
         float baseVolume = (type == AudioType.Music) ? musicVolume : soundVolume;
 
-        // Вычисляем финальную громкость
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         float finalVolume = baseVolume * Mathf.Clamp01(volumeMultiplier);
 
-        if (finalVolume < 0.01f) return; // Если громкость практически 0, не воспроизводим
+        if (finalVolume < 0.01f) return; // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 0, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
         if (loop)
         {
-            // Для зацикленных звуков
+            // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
             audioSource.clip = clip;
             audioSource.volume = finalVolume;
             audioSource.loop = true;
@@ -216,18 +216,18 @@ public class BattleAudioManager : MonoBehaviour
         }
         else
         {
-            // Для одноразовых звуков
+            // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
             audioSource.PlayOneShot(clip, finalVolume);
         }
     }
 
-    // === АДАПТИРОВАННЫЕ МЕТОДЫ ДЛЯ THEME BATTLE ===
+    // === пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ THEME BATTLE ===
 
     public void PlayThemeBattleSecond()
     {
         if (!isInitialized || themeBattleSecondAudioSource == null || battleThemeSecond == null) return;
 
-        // Используем PlayWithSetting для музыки
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ PlayWithSetting пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         PlayWithSetting(AudioType.Music, themeBattleSecondAudioSource, battleThemeSecond, 1f, true);
     }
 
@@ -235,7 +235,7 @@ public class BattleAudioManager : MonoBehaviour
     {
         if (!isInitialized || themeBattleThirdAudioSource == null || battleThemeThird == null) return;
 
-        // Используем PlayWithSetting для музыки
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ PlayWithSetting пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         PlayWithSetting(AudioType.Music, themeBattleThirdAudioSource, battleThemeThird, 1f, true);
     }
 
@@ -259,8 +259,8 @@ public class BattleAudioManager : MonoBehaviour
     {
         if (clickButtonAudioSource != null)
         {
-            // Используем PlayWithSetting для звука кнопки
-            // Если нет клипа, используем стандартное воспроизведение
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ PlayWithSetting пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+            // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (clickButtonAudioSource.clip != null)
             {
                 PlayWithSetting(AudioType.Sound, clickButtonAudioSource, clickButtonAudioSource.clip);
@@ -272,7 +272,7 @@ public class BattleAudioManager : MonoBehaviour
         }
     }
 
-    // === АДАПТИРОВАННЫЕ МЕТОДЫ ДЛЯ РЕЗУЛЬТАТОВ МАТЧА ===
+    // === пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ ===
 
     public void PlayResultWin()
     {
@@ -284,14 +284,14 @@ public class BattleAudioManager : MonoBehaviour
         PlayOneShotWithSettings(matchResultAudioSource, resultLose);
     }
 
-    // === АДАПТИРОВАННЫЕ МЕТОДЫ ДЛЯ БОЕВЫХ ЗВУКОВ ===
+    // === пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ ===
 
     public void PlayBattleSound()
     {
         PlayOneShotWithSettings(battleAudioSource, battleSound);
     }
 
-    // === АДАПТИРОВАННЫЕ МЕТОДЫ ДЛЯ ПОДНЯТИЯ ЮНИТОВ ===
+    // === пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ ===
 
     public void PlayCaptainPickUp() => PlayPickUpSound("captain");
     public void PlayCarpenterPickUp() => PlayPickUpSound("carpenter");
@@ -306,12 +306,12 @@ public class BattleAudioManager : MonoBehaviour
     {
         if (!isInitialized || pickUpUnitAudioSource == null) return;
 
-        // Защита от спама
+        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         if (Time.time - lastPickUpTime < pickUpCooldown) return;
 
         if (pickUpSounds.TryGetValue(unitType.ToLower(), out AudioClip clip) && clip != null)
         {
-            // Используем PlayWithSetting для звуков поднятия
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ PlayWithSetting пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             PlayWithSetting(AudioType.Sound, pickUpUnitAudioSource, clip);
             lastPickUpTime = Time.time;
         }
@@ -321,7 +321,7 @@ public class BattleAudioManager : MonoBehaviour
         }
     }
 
-    // === АДАПТИРОВАННЫЕ МЕТОДЫ ДЛЯ ХОДОВ ===
+    // === пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ ===
 
     public void PlayEndTurnSound()
     {
@@ -333,7 +333,7 @@ public class BattleAudioManager : MonoBehaviour
         PlayOneShotWithSettings(turnsAudioSource, switchTurnSound);
     }
 
-    // === АДАПТИРОВАННЫЕ МЕТОДЫ ДЛЯ ЗВУКОВ ХОДЬБЫ ===
+    // === пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ ===
 
     public void PlayCaptainWalk() => PlayWalkSound("captain");
     public void PlayCarpenterWalk() => PlayWalkSound("carpenter");
@@ -348,12 +348,12 @@ public class BattleAudioManager : MonoBehaviour
     {
         if (!isInitialized || walkAudioSource == null) return;
 
-        // Защита от спама
+        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         if (Time.time - lastWalkTime < walkCooldown) return;
 
         if (walkSounds.TryGetValue(unitType.ToLower(), out AudioClip clip) && clip != null)
         {
-            // Используем PlayWithSetting для звуков ходьбы
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ PlayWithSetting пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
             PlayWithSetting(AudioType.Sound, walkAudioSource, clip);
             lastWalkTime = Time.time;
         }
@@ -363,7 +363,7 @@ public class BattleAudioManager : MonoBehaviour
         }
     }
 
-    // === АДАПТИРОВАННЫЕ МЕТОДЫ ДЛЯ СОСТОЯНИЯ БИТВЫ ===
+    // === пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ ===
 
     public void PlayBattleLosingSoundStart()
     {
@@ -371,7 +371,7 @@ public class BattleAudioManager : MonoBehaviour
 
         if (!stateBattleAudioSource.isPlaying)
         {
-            // Используем PlayWithSetting для музыки состояния боя
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ PlayWithSetting пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
             PlayWithSetting(AudioType.Music, stateBattleAudioSource, battleLosingSound, 1f, true);
         }
     }
@@ -382,7 +382,7 @@ public class BattleAudioManager : MonoBehaviour
 
         if (!stateBattleAudioSource.isPlaying)
         {
-            // Используем PlayWithSetting для музыки состояния боя
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ PlayWithSetting пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
             PlayWithSetting(AudioType.Music, stateBattleAudioSource, battleWinningSound, 1f, true);
         }
     }
@@ -407,30 +407,30 @@ public class BattleAudioManager : MonoBehaviour
         }
     }
 
-    // === ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ (АДАПТИРОВАННЫЕ) ===
+    // === пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) ===
 
     private void PlayOneShotWithSettings(AudioSource audioSource, AudioClip clip)
     {
         if (!isInitialized || audioSource == null || clip == null) return;
 
-        // Используем PlayWithSetting вместо прямого PlayOneShot
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ PlayWithSetting пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ PlayOneShot
         PlayWithSetting(AudioType.Sound, audioSource, clip);
     }
 
-    // === ОБНОВЛЕННЫЕ МЕТОДЫ ДЛЯ УПРАВЛЕНИЯ ГРОМКОСТЬЮ ===
+    // === пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ===
 
     public void UpdateSoundVolume(float volume)
     {
         soundVolume = Mathf.Clamp01(volume);
         ApplyAudioVolumes();
 
-        // Сохраняем в оба места для совместимости
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         PlayerPrefs.SetFloat("SoundVolume", soundVolume);
 
-        // Если SettingsManager существует, обновляем и там
+        // пїЅпїЅпїЅпїЅ SettingsManager пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ
         if (SettingsManager.Instance != null)
         {
-            // Нужно сохранить все настройки, поэтому получаем текущие значения
+            // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             SettingsManager.Instance.SaveSettings(
                 SettingsManager.Instance.PlayerNickname,
                 soundVolume,
@@ -446,10 +446,10 @@ public class BattleAudioManager : MonoBehaviour
         musicVolume = Mathf.Clamp01(volume);
         ApplyAudioVolumes();
 
-        // Сохраняем в оба места для совместимости
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         PlayerPrefs.SetFloat("MusicVolume", musicVolume);
 
-        // Если SettingsManager существует, обновляем и там
+        // пїЅпїЅпїЅпїЅ SettingsManager пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ
         if (SettingsManager.Instance != null)
         {
             SettingsManager.Instance.SaveSettings(
@@ -461,7 +461,7 @@ public class BattleAudioManager : MonoBehaviour
             );
         }
 
-        // Если музыка остановилась, но громкость > 0 - перезапускаем
+        // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ > 0 - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         if (themeBattleSecondAudioSource != null &&
             !themeBattleSecondAudioSource.isPlaying &&
             themeBattleSecondAudioSource.clip != null &&
@@ -480,8 +480,8 @@ public class BattleAudioManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Синхронизирует настройки громкости с SettingsManager
-    /// Вызывайте этот метод при старте сцены или при изменении настроек
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ SettingsManager
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
     public void SyncWithSettingsManager()
     {
@@ -493,14 +493,14 @@ public class BattleAudioManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("SettingsManager не найден при синхронизации");
+            Debug.LogWarning("SettingsManager пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
         }
     }
 
     public float GetSoundVolume() => soundVolume;
     public float GetMusicVolume() => musicVolume;
 
-    // === МЕТОДЫ ДЛЯ ОСТАНОВКИ ВСЕХ ЗВУКОВ (БЕЗ ИЗМЕНЕНИЙ) ===
+    // === пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) ===
 
     public void StopAllSounds()
     {

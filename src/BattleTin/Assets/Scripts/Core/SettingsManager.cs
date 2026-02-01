@@ -4,11 +4,19 @@ public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager Instance { get; private set; }
 
+<<<<<<< HEAD
     public string PlayerNickname { get; set; }
     public float SoundVolume { get; set; }
     public float MusicVolume { get;  set; }
     public int ResolutionIndex { get; set; }
     public int WindowModeIndex { get; set; }
+=======
+    public string PlayerNickname { get; private set; }
+    public float SoundVolume { get; private set; }
+    public float MusicVolume { get; private set; }
+    public int ResolutionIndex { get; private set; }
+    public int WindowModeIndex { get; private set; }
+>>>>>>> a97fb0f416937048c9a87c9b1299806cfa77bcb2
 
     private void Awake()
     {

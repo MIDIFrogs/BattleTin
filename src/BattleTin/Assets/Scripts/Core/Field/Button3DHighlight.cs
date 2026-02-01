@@ -1,21 +1,23 @@
+using Newtonsoft.Json.Bson;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace MIDIFrogs.BattleTin.Core
 {
-    [RequireComponent(typeof(MeshRenderer))]
     public class Button3DHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         public Material defaultMaterial;
         public Material hoverMaterial;
         public Material selectMaterial;
+        public Material highlightMaterial;
 
         private bool isSelected = false;
-        private MeshRenderer meshRenderer;
+        private bool isHighlighted = false;
+        [SerializeField] private MeshRenderer meshRenderer;
 
         void Start()
         {
-            meshRenderer = GetComponent<MeshRenderer>();
+            if (meshRenderer == null) meshRenderer = GetComponent<MeshRenderer>();
             defaultMaterial = meshRenderer.material;
         }
 
@@ -28,7 +30,7 @@ namespace MIDIFrogs.BattleTin.Core
         public void OnPointerExit(PointerEventData eventData)
         {
             if (!isSelected)
-                meshRenderer.material = defaultMaterial;
+                meshRenderer.material = isHighlighted ? highlightMaterial : defaultMaterial;
         }
 
         public void Select()
@@ -40,6 +42,18 @@ namespace MIDIFrogs.BattleTin.Core
         public void Deselect()
         {
             isSelected = false;
+            meshRenderer.material = isHighlighted ? highlightMaterial : defaultMaterial;
+        }
+
+        public void Highlight()
+        {
+            isHighlighted = true;
+            meshRenderer.material = highlightMaterial;
+        }
+
+        public void RemoveHighlight()
+        {
+            isHighlighted = false;
             meshRenderer.material = defaultMaterial;
         }
     }
