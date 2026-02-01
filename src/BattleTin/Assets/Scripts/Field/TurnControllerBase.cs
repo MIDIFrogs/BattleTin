@@ -1,5 +1,6 @@
 ﻿using System;
 using MIDIFrogs.BattleTin.Gameplay;
+using MIDIFrogs.BattleTin.Gameplay.Masks;
 using MIDIFrogs.BattleTin.Gameplay.Orders;
 using UnityEngine;
 
@@ -7,6 +8,8 @@ namespace MIDIFrogs.BattleTin.Field
 {
     public abstract class TurnControllerBase : MonoBehaviour, ITurnController
     {
+        [SerializeField] private PieceView piecePrefab;
+
         public abstract int TurnIndex { get; protected set; }
         public abstract GameState GameState { get; protected set; }
 
@@ -49,6 +52,18 @@ namespace MIDIFrogs.BattleTin.Field
         protected virtual void OnOrderSubmitted(MoveOrder order)
         {
             OrderSubmitted?.Invoke(order);
+        }
+
+        protected virtual void SetupAnimator(TurnAnimator animator)
+        {
+            animator.SetPieceViewFactory(x =>
+            {
+                var v = Instantiate(piecePrefab);
+                v.PieceId = x.PieceId.Value;
+                v.IsKing = MaskDatabase.All[x.Mask].IsKing;
+                v.TeamId = x.TeamId;
+                return v;
+            });
         }
     }
 }

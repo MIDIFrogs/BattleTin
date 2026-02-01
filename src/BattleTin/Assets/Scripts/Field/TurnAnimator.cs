@@ -20,6 +20,12 @@ namespace MIDIFrogs.BattleTin.Field
 
         public event Action<PieceState> PieceMoveStarted = delegate { };
 
+        private Func<PieceState, PieceView> pieceViewFactory;
+
+        public void SetPieceViewFactory(Func<PieceState, PieceView> factory)
+        {
+            pieceViewFactory = factory;
+        }
 
         public void LoadPieceViews(Dictionary<int, PieceView> pieceViews)
         {
@@ -42,8 +48,10 @@ namespace MIDIFrogs.BattleTin.Field
         public void AnimateDiff(GameState oldState, GameState newState)
         {
             Debug.Log("End-turn animation is running.");
+
             AnimateMoves(oldState, newState);
             AnimateDeaths(oldState, newState);
+            AnimateSpawns(oldState, newState);
         }
 
         void AnimateMoves(GameState oldState, GameState newState)
@@ -75,7 +83,7 @@ namespace MIDIFrogs.BattleTin.Field
                     .SetEase(Ease.OutQuad);
 
 
-                    var animator = view.GetComponent<Animator>();
+                    view.TryGetComponent<Animator>(out var animator);
 
                     animator?.SetBool("Moving", true);
                     PieceMoveStarted(newPiece);
@@ -114,6 +122,43 @@ namespace MIDIFrogs.BattleTin.Field
                 }
             }
         }
+
+        void AnimateSpawns(GameState oldState, GameState newState)
+        {
+            foreach (var kv in newState.Pieces)
+            {
+                int pieceId = kv.Key;
+                var newPiece = kv.Value;
+
+                if (oldState.Pieces.ContainsKey(pieceId))
+                    continue; // уже была, не спавн
+
+                Debug.Log($"Spawning new piece #{pieceId} at cell {newPiece.CellId.Value}");
+
+                if (pieceViewFactory == null)
+                {
+                    Debug.LogError("PieceViewFactory is not set!");
+                    continue;
+                }
+
+                var view = pieceViewFactory(newPiece);
+                view.SetMask(newPiece.Mask);
+                pieceViews.Add(pieceId, view);
+
+                var hex = HexByCellId(newPiece.CellId.Value);
+
+                view.transform.SetParent(hex.transform, worldPositionStays: false);
+                view.transform.localPosition = Vector3.up * 0.5f;
+
+                // стартовое состояние
+                view.transform.localScale = Vector3.zero;
+
+                view.transform
+                    .DOScale(Vector3.one, 0.25f)
+                    .SetEase(Ease.OutBack);
+            }
+        }
+
 
         Hex HexByCellId(int cellId)
         {

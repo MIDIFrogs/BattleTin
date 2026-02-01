@@ -16,11 +16,12 @@ namespace MIDIFrogs.BattleTin.Field
         private TurnSyncManager sync;
 
         private bool isDesynced;
+        [SerializeField] private GameState gameState;
 
         public MoveOrder? LocalOrder { get; private set; }
         public override int TurnIndex { get; protected set; }
 
-        public override GameState GameState { get; protected set; }
+        public override GameState GameState { get => gameState; protected set => gameState = value; }
 
         public override void InitializeGameState(GameState initialState)
         {
@@ -31,6 +32,7 @@ namespace MIDIFrogs.BattleTin.Field
         {
             sync = GetComponent<TurnSyncManager>();
             turnAnimator = GetComponent<TurnAnimator>();
+            SetupAnimator(turnAnimator);
 
             sync.OnTurnStarted += OnTurnStartedFromServer;
             sync.OnTurnResolved += OnTurnResolvedFromServer;

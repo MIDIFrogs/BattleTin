@@ -39,6 +39,8 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
         public int CellId;
         public int Health;
         public MaskType Mask;
+        public int LastActionTurn;
+        public bool HasAttacked;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer)
             where T : IReaderWriter
@@ -48,6 +50,8 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
             serializer.SerializeValue(ref CellId);
             serializer.SerializeValue(ref Health);
             serializer.SerializeValue(ref Mask);
+            serializer.SerializeValue(ref LastActionTurn);
+            serializer.SerializeValue(ref HasAttacked);
         }
     }
 
@@ -95,7 +99,9 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
                     TeamId = p.TeamId,
                     CellId = p.CellId.Value,
                     Health = p.Health,
-                    Mask = p.Mask
+                    Mask = p.Mask,
+                    LastActionTurn = p.LastActionTurn,
+                    HasAttacked = p.HasDealtDamage,
                 }).ToArray(),
 
                 Inventories = state.Inventories.Values.Select(inv => new InventorySnapshot
@@ -130,7 +136,9 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
                     TeamId = p.TeamId,
                     CellId = new(p.CellId),
                     Health = p.Health,
-                    Mask = p.Mask
+                    Mask = p.Mask,
+                    LastActionTurn = p.LastActionTurn,
+                    HasDealtDamage = p.HasAttacked,
                 };
             }
 
