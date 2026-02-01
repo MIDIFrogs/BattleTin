@@ -1,5 +1,6 @@
 ﻿using MIDIFrogs.BattleTin.Field;
 using MIDIFrogs.BattleTin.Gameplay.Orders;
+using MIDIFrogs.BattleTin.UI.Assets.Scripts.UI.Masks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,7 +15,7 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI
         [SerializeField] private TMP_Text fromText;
         [SerializeField] private TMP_Text toText;
 
-        [SerializeField] private TurnController turnController;
+        [SerializeField] private TurnControllerBase turnController;
         [SerializeField] private MaskVisualizationOptions maskVisualizationOptions;
 
         private void Awake()

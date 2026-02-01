@@ -8,7 +8,7 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI
     internal class EndgamePanel : MonoBehaviour
     {
         public TMP_Text verdictText;
-        public TurnController turnController;
+        public TurnControllerBase turnController;
         public GameObject panel;
 
         private void Awake()
