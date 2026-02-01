@@ -63,7 +63,7 @@ MonoBehaviour:
     Visual: {fileID: 2277206249568345773, guid: a263e96101b3d3f4ca9c422ccc1ab4a6, type: 3}
   - Mask: 8
     TeamIndex: 0
-    Visual: {fileID: 5225996412452038897, guid: e02922b80ef2ce14cbb669432d4ad92b, type: 3}
+    Visual: {fileID: 7989611957993114176, guid: d3b2ca11c674f0a479842d5516158db4, type: 3}
   - Mask: 8
     TeamIndex: 1
-    Visual: {fileID: 5225996412452038897, guid: e02922b80ef2ce14cbb669432d4ad92b, type: 3}
+    Visual: {fileID: 7989611957993114176, guid: d3b2ca11c674f0a479842d5516158db4, type: 3}

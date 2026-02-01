@@ -1,8 +1,6 @@
-using System.Linq;
 using MIDIFrogs.BattleTin.Field;
 using MIDIFrogs.BattleTin.Gameplay.Orders;
 using MIDIFrogs.BattleTin.Gameplay.Pieces;
-using MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +11,7 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI.Masks
     {
         public TurnControllerBase turnController;
         public HexSelectionManager hexManager;
+        public int teamId;
 
         [Header("Visual parameters")]
         [SerializeField] private Image maskIcon;
@@ -31,7 +30,7 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI.Masks
             turnController.SetLocalOrder(
                 MoveOrder.EquipMask(
                     turn: turnController.TurnIndex,
-                    teamId: MatchmakingManager.Instance.LocalTeamId,
+                    teamId: teamId,
                     pieceId: hexManager.SelectedPiece.PieceId,
                     mask: maskType
                 )
