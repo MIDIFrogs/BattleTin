@@ -5,17 +5,16 @@ using UnityEngine.UI;
 
 namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI
 {
-    [RequireComponent(typeof(TurnController))]
     internal class NextTurnButton : MonoBehaviour
     {
-        private TurnController turnController;
+        private TurnControllerBase turnController;
         private Button button;
         
         [SerializeField] private TMP_Text turnIndicator;
 
         private void Awake()
         {
-            turnController = GetComponent<TurnController>();
+            turnController = GetComponent<TurnControllerBase>();
             button = GetComponent<Button>();
             button.onClick.AddListener(OnClicked);
 

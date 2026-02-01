@@ -19,16 +19,14 @@ namespace MIDIFrogs.BattleTin.Field
         public MonoBehaviour playerContextBehaviour;
         private IPlayerContext playerContext;
 
-        public MonoBehaviour turnControllerBehaviour;
-
-        private ITurnController turnController;
+        public TurnControllerBase turnController;
         public TurnAnimator turnAnimator;
         [SerializeField] MasksInventoryModel maskInventory;
 
         private BoardGraph graph;
         private Hex[] allCells;
+        private PieceView[] allPieces;
 
-        public GameObject playerUnitPrefab;
         private PieceView currentSelectedUnit;
         private Hex currentSelectedHex;
         private List<Hex> availableMoveHexes = new List<Hex>();
@@ -39,21 +37,13 @@ namespace MIDIFrogs.BattleTin.Field
 
         void Awake()
         {
-            turnController = turnControllerBehaviour.GetComponent<ITurnController>();
-
-            if (turnController == null)
-                Debug.LogError("Assigned controller does not implement ITurnController");
-
             playerContext = playerContextBehaviour.GetComponent<IPlayerContext>();
 
             if (playerContext == null)
                 Debug.LogError("Assigned object does not implement IPlayerContext");
 
-
-
-
             allCells = transform.GetComponentsInChildren<Hex>();
-            var pieces = transform.GetComponentsInChildren<PieceView>();
+            allPieces = transform.GetComponentsInChildren<PieceView>();
             graph = new(allCells.Length);
             int index = 0;
             foreach (var cell in allCells)
@@ -62,12 +52,12 @@ namespace MIDIFrogs.BattleTin.Field
                     cell.CellId = index++;
             }
             index = 0;
-            foreach (var p in pieces)
+            foreach (var p in allPieces)
             {
                 if (p.PieceId == 0)
                     p.PieceId = index++;
             }
-            turnAnimator.LoadPieceViews(pieces.ToDictionary(x => x.PieceId, y => y));
+            turnAnimator.LoadPieceViews(allPieces.ToDictionary(x => x.PieceId, y => y));
 
             List<PieceState> pieceStates = new();
             foreach (var cell in allCells)
@@ -101,6 +91,18 @@ namespace MIDIFrogs.BattleTin.Field
             turnController.InitializeGameState(GameState.Create(pieceStates, inventories, graph));
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
+
+            turnController.GameStateUpdated += OnGameStateUpdated;
+
+            OnGameStateUpdated(turnController.GameState);
+        }
+
+        private void OnGameStateUpdated(GameState obj)
+        {
+            foreach (var m in allPieces)
+            {
+                m.SetMask(obj.Pieces[m.PieceId].Mask);
+            }
         }
 
         public void OnHexClicked(Hex clickedHex)
@@ -119,7 +121,7 @@ namespace MIDIFrogs.BattleTin.Field
             }
 
             var pieceViews = clickedHex.transform.GetComponentsInChildren<PieceView>();
-            var piece = pieceViews.FirstOrDefault(x => x.TeamId == MatchmakingManager.Instance.LocalTeamId);
+            var piece = pieceViews.FirstOrDefault(x => x.TeamId == playerContext.LocalTeamId);
 
             if (piece != null)
             {
