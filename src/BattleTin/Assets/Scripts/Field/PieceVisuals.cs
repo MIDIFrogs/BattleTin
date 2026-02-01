@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MIDIFrogs.BattleTin.Field.Assets.Scripts.Field
 {
-    [Serializable]
+    [CreateAssetMenu(menuName = "Pieces/Visualization")]
     public class PieceVisuals : ScriptableObject
     {
         public PieceConfig[] Pieces;

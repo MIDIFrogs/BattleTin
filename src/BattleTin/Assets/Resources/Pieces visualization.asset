@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f50b98a2778a6214ca699e7d24c6aa42, type: 3}
+  m_Name: Pieces visualization
+  m_EditorClassIdentifier: 
+  Pieces:
+  - Mask: 0
+    TeamIndex: 0
+    Visual: {fileID: 8662607314197862975, guid: 170418f76ae076a42a8059db04da1178, type: 3}
+  - Mask: 0
+    TeamIndex: 1
+    Visual: {fileID: 8662607314197862975, guid: fff7fc1882bb0704bbf0faace5926b6b, type: 3}
+  - Mask: 1
+    TeamIndex: 0
+    Visual: {fileID: 8119678997135417845, guid: bf3bca38e09fa3c4bacaac5a335f0743, type: 3}
+  - Mask: 1
+    TeamIndex: 1
+    Visual: {fileID: 8119678997135417845, guid: 9ee13227e80a8194d9b3193bbb93f52d, type: 3}
+  - Mask: 2
+    TeamIndex: 0
+    Visual: {fileID: 6624576412975672038, guid: 7868ce659e1d7ab4aa23267602f976a9, type: 3}
+  - Mask: 2
+    TeamIndex: 1
+    Visual: {fileID: 6624576412975672038, guid: 5d76bcaf00f80c446962800055cff455, type: 3}
+  - Mask: 3
+    TeamIndex: 0
+    Visual: {fileID: 3930807304151756917, guid: de6cfc44f64c4c24b8a632fe252c26d2, type: 3}
+  - Mask: 3
+    TeamIndex: 1
+    Visual: {fileID: 3930807304151756917, guid: d63c56489e05cbd468c42c3e397f2463, type: 3}
+  - Mask: 4
+    TeamIndex: 0
+    Visual: {fileID: 6381481841375016339, guid: 77afa307b021ee040ac65097bc7ac795, type: 3}
+  - Mask: 4
+    TeamIndex: 1
+    Visual: {fileID: 6381481841375016339, guid: 195b7a4a80b8e5943a0b7ab161eeaca6, type: 3}
+  - Mask: 5
+    TeamIndex: 0
+    Visual: {fileID: 5421726696260250926, guid: 93670ee21ed29b648afd406b5eb1af2c, type: 3}
+  - Mask: 5
+    TeamIndex: 1
+    Visual: {fileID: 5421726696260250926, guid: 879c7df936fb507489ba83a823224a76, type: 3}
+  - Mask: 6
+    TeamIndex: 0
+    Visual: {fileID: 5282386919803092387, guid: 4bac9dd471ae34d4dae4c15d6fa66d4a, type: 3}
+  - Mask: 6
+    TeamIndex: 1
+    Visual: {fileID: 5282386919803092387, guid: 9e45e17a92cc03e46a3121009da4a3f8, type: 3}
+  - Mask: 7
+    TeamIndex: 0
+    Visual: {fileID: 2277206249568345773, guid: 3d11b1a170ed9a7448a0bcbe341b3f25, type: 3}
+  - Mask: 7
+    TeamIndex: 1
+    Visual: {fileID: 2277206249568345773, guid: a263e96101b3d3f4ca9c422ccc1ab4a6, type: 3}
+  - Mask: 8
+    TeamIndex: 0
+    Visual: {fileID: 5225996412452038897, guid: e02922b80ef2ce14cbb669432d4ad92b, type: 3}
+  - Mask: 8
+    TeamIndex: 1
+    Visual: {fileID: 5225996412452038897, guid: e02922b80ef2ce14cbb669432d4ad92b, type: 3}
