@@ -92,17 +92,17 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI
             int killed = initialUnitCount - alive;
             float killedRatio = (float)killed / initialUnitCount;
 
-            if (!played25 && killedRatio >= 0.25f)
-            {
-                played25 = true;
-                audioManager.PlayThemeBattleSecond();
-            }
+            //if (!played25 && killedRatio >= 0.25f)
+            //{
+            //    played25 = true;
+            //    audioManager.PlayThemeBattleSecond();
+            //}
 
-            if (!played50 && killedRatio >= 0.5f)
-            {
-                played50 = true;
-                audioManager.PlayThemeBattleThird();
-            }
+            //if (!played50 && killedRatio >= 0.5f)
+            //{
+            //    played50 = true;
+            //    audioManager.PlayThemeBattleThird();
+            //}
 
             if (state.GameOver && !gameOverHandled)
             {

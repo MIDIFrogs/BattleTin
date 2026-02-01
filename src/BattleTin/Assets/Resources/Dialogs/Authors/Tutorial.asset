@@ -15,4 +15,4 @@ MonoBehaviour:
   id: b34859c0-1fd7-4ad5-b697-21b4c595adb5
   authorName: <New Author>
   signColor: {r: 1, g: 1, b: 1, a: 1}
-  avatar: {fileID: 0}
+  avatar: {fileID: 21300000, guid: c885eaae8e060dd4a8276c26e1fa3ecb, type: 3}

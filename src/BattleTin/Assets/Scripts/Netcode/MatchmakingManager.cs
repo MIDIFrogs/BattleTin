@@ -181,7 +181,7 @@ namespace MIDIFrogs.BattleTin.Netcode.Assets.Scripts.Netcode
         private void LoadBattleScene()
         {
             networkManager.SceneManager.LoadScene(
-                "Battle",
+                "Game",
                 UnityEngine.SceneManagement.LoadSceneMode.Single
             );
         }

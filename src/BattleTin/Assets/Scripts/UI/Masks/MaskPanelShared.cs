@@ -66,6 +66,8 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI.Masks
                     mask: SelectedMask
                 )
             );
+
+            gameObject.SetActive(false);
         }
     }
 }

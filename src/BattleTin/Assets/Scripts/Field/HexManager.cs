@@ -25,7 +25,7 @@ namespace MIDIFrogs.BattleTin.Field
 
         private BoardGraph graph;
         private Hex[] allCells;
-        private PieceView[] allPieces;
+        private List<PieceView> allPieces;
 
         private PieceView currentSelectedUnit;
         private Hex currentSelectedHex;
@@ -43,7 +43,7 @@ namespace MIDIFrogs.BattleTin.Field
                 Debug.LogError("Assigned object does not implement IPlayerContext");
 
             allCells = transform.GetComponentsInChildren<Hex>();
-            allPieces = transform.GetComponentsInChildren<PieceView>();
+            allPieces = transform.GetComponentsInChildren<PieceView>().ToList();
             graph = new(allCells.Length);
             int index = 0;
             foreach (var cell in allCells)
@@ -62,7 +62,7 @@ namespace MIDIFrogs.BattleTin.Field
             List<PieceState> pieceStates = new();
             foreach (var cell in allCells)
             {
-                graph.AddConnections(new(cell.CellId), cell.Neighbors.Select(x => new CellId(x.CellId)), cell.DiagonalNeighbors.Select(x => new CellId(x.CellId)));
+                graph.AddConnections(new(cell.CellId), cell.Neighbors.Where(x => x != null).Select(x => new CellId(x.CellId)), cell.DiagonalNeighbors.Where(x => x != null).Select(x => new CellId(x.CellId)));
                 var piece = cell.transform.GetComponentInChildren<PieceView>();
                 if (piece != null)
                 {
@@ -99,8 +99,14 @@ namespace MIDIFrogs.BattleTin.Field
 
         private void OnGameStateUpdated(GameState obj)
         {
-            foreach (var m in allPieces)
+            for (int i = allPieces.Count - 1; i >= 0; i--)
             {
+                PieceView m = allPieces[i];
+                if (!obj.Pieces.ContainsKey(m.PieceId))
+                {
+                    allPieces.RemoveAt(i);
+                    continue;
+                }
                 m.SetMask(obj.Pieces[m.PieceId].Mask);
             }
         }

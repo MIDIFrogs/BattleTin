@@ -11,7 +11,7 @@ public class TurnManagerUI : MonoBehaviour
     [Header("Настройки")]
     [SerializeField] private bool autoSubscribe = true; 
 
-    private TurnController turnController;
+    public TurnController turnController;
     private float currentDuration;
     private float timer;
     private bool isTimerActive;

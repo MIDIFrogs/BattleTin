@@ -75,7 +75,7 @@ namespace MIDIFrogs.BattleTin.Field
                     .SetEase(Ease.OutQuad);
 
 
-                    var animator = view.GetComponent<Animator>();
+                    view.TryGetComponent<Animator>(out var animator);
 
                     animator?.SetBool("Moving", true);
                     PieceMoveStarted(newPiece);

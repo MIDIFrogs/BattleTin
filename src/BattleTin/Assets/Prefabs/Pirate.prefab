@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3211885896286982182}
   - component: {fileID: 8128570362055447588}
+  - component: {fileID: 5593073041786460967}
   m_Layer: 0
   m_Name: Pirate
   m_TagString: Untagged
@@ -49,3 +50,25 @@ MonoBehaviour:
   PieceId: 0
   TeamId: 0
   IsKing: 0
+--- !u!95 &5593073041786460967
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6190628237809441039}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2d2bd937402fe9248b56287204bc554d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
