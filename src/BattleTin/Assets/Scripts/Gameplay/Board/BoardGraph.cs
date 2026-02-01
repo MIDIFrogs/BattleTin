@@ -44,9 +44,15 @@ namespace MIDIFrogs.BattleTin.Gameplay.Board
             };
         }
 
+        public IEnumerable<CellId> AllCells => _nodes.Select(x => x.Id);
+
         public bool IsDirectConnected(CellId from, CellId to) => _nodes[from.Value].DirectConnections.Contains(to);
 
         public bool IsDiagonallyConnected(CellId from, CellId to) => _nodes[from.Value].DiagonalConnections.Contains(to);
+
+        public IEnumerable<CellId> GetDirectNeighbors(CellId cell) => _nodes[cell.Value].DirectConnections;
+
+        public IEnumerable<CellId> GetDiagonalNeighbors(CellId cell) => _nodes[cell.Value].DiagonalConnections;
 
         private struct Node
         {

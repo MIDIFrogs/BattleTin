@@ -1,5 +1,4 @@
 ﻿using System;
-using MIDIFrogs.BattleTin.Core;
 using MIDIFrogs.BattleTin.Gameplay;
 using MIDIFrogs.BattleTin.Gameplay.Orders;
 using MIDIFrogs.BattleTin.Netcode;
@@ -11,111 +10,152 @@ namespace MIDIFrogs.BattleTin.Field
 {
     [RequireComponent(typeof(TurnSyncManager))]
     [RequireComponent(typeof(TurnAnimator))]
-    [RequireComponent(typeof(Button3DHighlight))]
-    public class TurnController : MonoBehaviour
+    public class TurnController : TurnControllerBase
     {
-        private GameState gameState;
         private TurnAnimator turnAnimator;
-        private TurnSyncManager turnSyncManager;
-        private Button3DHighlight button;
+        private TurnSyncManager sync;
 
+        private bool isDesynced;
 
         public MoveOrder? LocalOrder { get; private set; }
-        public TurnPhase Phase { get; private set; }
+        public override int TurnIndex { get; protected set; }
 
-        public MoveOrder? RemoteOrder { get; private set; }
-        public int TurnIndex { get; private set; }
+        public override GameState GameState { get; protected set; }
 
-        public void InitializeGameState(GameState initialState)
+        public override void InitializeGameState(GameState initialState)
         {
-            gameState = initialState;
-        }
-
-        public void ConfirmTurn()
-        {
-            if (Phase != TurnPhase.Planning)
-                return;
-
-            // TODO: lock the UI
-
-            if (!LocalOrder.HasValue)
-            {
-                LocalOrder = CreatePassOrder();
-            }
-
-            Phase = TurnPhase.WaitingForRemote;
-            button.Select();
-            turnSyncManager.SendOrder(LocalOrder.Value);
-
-            if (!LocalOrder.HasValue || !RemoteOrder.HasValue)
-                return;
-
-            Phase = TurnPhase.Resolving;
-            ResolveTurn();
-        }
-
-        private MoveOrder? CreatePassOrder() => new()
-        {
-            Mask = Gameplay.Pieces.MaskType.None,
-            PieceId = 0,
-            Type = OrderType.Pass,
-            TeamId = MatchmakingManager.Instance.LocalTeamId,
-            TargetCellId = 0,
-            TurnIndex = TurnIndex,
-        };
-
-        public void SetLocalOrder(MoveOrder order)
-        {
-            if (Phase != TurnPhase.Planning)
-                return;
-
-            LocalOrder = order;
+            sync.GameState = GameState = initialState;
         }
 
         private void Awake()
         {
-            turnSyncManager = GetComponent<TurnSyncManager>();
-            turnSyncManager.OnRemoteConfirmed += TryResolve;
+            sync = GetComponent<TurnSyncManager>();
             turnAnimator = GetComponent<TurnAnimator>();
-            button = GetComponent<Button3DHighlight>();
+
+            sync.OnTurnStarted += OnTurnStartedFromServer;
+            sync.OnTurnResolved += OnTurnResolvedFromServer;
+            sync.OnHeartbeatReceived += OnHeartbeat;
+            sync.OnFullStateReceived += OnFullStateReceived;
+            sync.OnGameOver += winner =>
+            {
+                GameState.GameOver = true;
+                GameState.WinnerTeamId = winner;
+
+                OnGameStateUpdated(GameState);
+            };
         }
 
-        void FinishTurn()
+        /* =========================
+         * CLIENT INPUT
+         * ========================= */
+
+        public override void SetLocalOrder(MoveOrder order)
         {
-            LocalOrder = null;
-            RemoteOrder = null;
-
-            TurnIndex++;
-            Phase = TurnPhase.Planning;
-
-            // TODO: enable UI
-            button.Deselect();
-        }
-
-        private void ResolveTurn()
-        {
-            var oldState = gameState;
-            var newState = TurnResolver.Resolve(
-                gameState,
-                LocalOrder.Value,
-                RemoteOrder.Value
-            );
-
-            gameState = newState;
-
-            turnAnimator.AnimateDiff(oldState, newState);
-
-            FinishTurn();
-        }
-
-        private void TryResolve(MoveOrder obj)
-        {
-            RemoteOrder = obj;
-            if (!LocalOrder.HasValue || !RemoteOrder.HasValue)
+            if (order.TurnIndex != TurnIndex)
                 return;
 
-            Phase = TurnPhase.Resolving;
-            ResolveTurn();
+            LocalOrder = order;
+            OnOrderUpdated(LocalOrder.Value);
+        }
+
+        public override void ConfirmTurn()
+        {
+            if (!LocalOrder.HasValue)
+                LocalOrder = CreatePassOrder();
+
+            sync.SendOrder(LocalOrder.Value);
+            OnOrderSubmitted(LocalOrder ?? CreatePassOrder());
+        }
+
+        public void Surrender()
+        {
+            sync.SurrenderServerRpc(MatchmakingManager.Instance.LocalTeamId);
+        }
+
+        /* =========================
+         * SERVER EVENTS
+         * ========================= */
+        private void OnHeartbeat(int serverTurn, float timeLeft, int serverHash)
+        {
+            if (isDesynced)
+                return;
+
+            if (serverTurn != TurnIndex)
+            {
+                TriggerDesync("TurnIndex mismatch");
+                return;
+            }
+
+            int localHash = GameStateHasher.Compute(GameState);
+
+            if (localHash != serverHash)
+            {
+                TriggerDesync("GameState hash mismatch");
+                return;
+            }
+
+            // Мягкая коррекция таймера
+            OnTurnTimerStarted(timeLeft);
+        }
+
+        private void TriggerDesync(string reason)
+        {
+            Debug.LogWarning($"DESYNC: {reason}");
+            isDesynced = true;
+
+            // 1. Блокируем ввод
+            // UI/Input system сам подпишется
+            DesyncDetected?.Invoke();
+
+            // 2. Запрашиваем полный стейт
+            sync.RequestFullStateSyncServerRpc(NetworkManager.Singleton.LocalClientId);
+        }
+
+        public event Action DesyncDetected = delegate { };
+
+        private void OnFullStateReceived(GameStateSnapshot state, int turn, float timeLeft)
+        {
+            var newState = state.FromSnapshot(GameState.Board);
+            turnAnimator.AnimateDiff(GameState, newState);
+
+            GameState = newState;
+            TurnIndex = turn;
+            isDesynced = false;
+
+            OnGameStateUpdated(GameState);
+            OnTurnTimerStarted(timeLeft);
+        }
+
+        private void OnTurnStartedFromServer(int turnIndex, float duration)
+        {
+            TurnIndex = turnIndex;
+            LocalOrder = null;
+            OnOrderUpdated(CreatePassOrder());
+
+            OnTurnTimerStarted(duration);
+            OnTurnStarted(GameState);
+        }
+
+        private void OnTurnResolvedFromServer(MoveOrder a, MoveOrder b)
+        {
+            var oldState = GameState;
+
+            sync.GameState = GameState = TurnResolver.Resolve(GameState, a, b);
+            OnGameStateUpdated(GameState);
+            turnAnimator.AnimateDiff(oldState, GameState);
+            turnAnimator.PlayBattle(a, b, oldState, GameState);
+
+            OnTurnFinished(GameState);
+        }
+
+        private MoveOrder CreatePassOrder()
+        {
+            return new MoveOrder
+            {
+                TeamId = MatchmakingManager.Instance.LocalTeamId,
+                TurnIndex = TurnIndex,
+                Type = OrderType.Pass
+            };
         }
     }
 }
