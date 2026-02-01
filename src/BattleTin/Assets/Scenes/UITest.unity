@@ -719,6 +719,7 @@ GameObject:
   - component: {fileID: 194373392}
   - component: {fileID: 194373394}
   - component: {fileID: 194373395}
+  - component: {fileID: 194373396}
   m_Layer: 5
   m_Name: Settings
   m_TagString: Untagged
@@ -797,6 +798,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalSprite: {fileID: 21300000, guid: baa03329466a39e49a3a9fb531bd1aec, type: 3}
   hoverSprite: {fileID: 21300000, guid: d071c0d56d96ce740a97b990eb302ff2, type: 3}
+  buttonImage: {fileID: 0}
+  button: {fileID: 0}
 --- !u!114 &194373395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -853,6 +856,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &194373396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 194373390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5def5ec4129cfe64bbb09db50146408b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalSprite: {fileID: 21300000, guid: baa03329466a39e49a3a9fb531bd1aec, type: 3}
+  hoverSprite: {fileID: 21300000, guid: 18f97742d7f0a754ea2a98d063de5a0c, type: 3}
 --- !u!1 &210533280
 GameObject:
   m_ObjectHideFlags: 0
@@ -2053,6 +2070,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalSprite: {fileID: 21300000, guid: 8e057ea83d21625459dac16c76096875, type: 3}
   hoverSprite: {fileID: 21300000, guid: 8d097789cf193754a8cade5a505e98eb, type: 3}
+  buttonImage: {fileID: 0}
+  button: {fileID: 0}
 --- !u!114 &783798244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2878,6 +2897,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalSprite: {fileID: 21300000, guid: 358af7119fbf73847beb68c36f4b408a, type: 3}
   hoverSprite: {fileID: 21300000, guid: 6dac92347ada2774297c63ca1ca04c8f, type: 3}
+  buttonImage: {fileID: 0}
+  button: {fileID: 0}
 --- !u!114 &1112091075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3090,11 +3111,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1159328952}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35b34c9a8ee1c344c96e811a1986d774, type: 3}
+  m_Script: {fileID: 11500000, guid: 5def5ec4129cfe64bbb09db50146408b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSprite: {fileID: 21300000, guid: ae511085d28a46c4db29717592bb66ff, type: 3}
-  hoverSprite: {fileID: 21300000, guid: f641cf28927ff2c4fb621c2be09cbfa5, type: 3}
+  normalSprite: {fileID: 21300000, guid: b2cfaba5fb1d80a44a30165f15bd407c, type: 3}
+  hoverSprite: {fileID: 21300000, guid: 10a081e6e0ee1e94b8a48bc5c1242458, type: 3}
 --- !u!1 &1188413220
 GameObject:
   m_ObjectHideFlags: 0
@@ -4042,6 +4063,7 @@ GameObject:
   - component: {fileID: 1814076265}
   - component: {fileID: 1814076267}
   - component: {fileID: 1814076268}
+  - component: {fileID: 1814076269}
   m_Layer: 5
   m_Name: Ship
   m_TagString: Untagged
@@ -4120,6 +4142,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalSprite: {fileID: 21300000, guid: baa03329466a39e49a3a9fb531bd1aec, type: 3}
   hoverSprite: {fileID: 21300000, guid: d071c0d56d96ce740a97b990eb302ff2, type: 3}
+  buttonImage: {fileID: 0}
+  button: {fileID: 0}
 --- !u!114 &1814076268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4176,6 +4200,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &1814076269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1814076263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5def5ec4129cfe64bbb09db50146408b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalSprite: {fileID: 21300000, guid: c885eaae8e060dd4a8276c26e1fa3ecb, type: 3}
+  hoverSprite: {fileID: 21300000, guid: e3e5d85556c1c2b4fa8670ff3df4077b, type: 3}
 --- !u!1 &1849592010
 GameObject:
   m_ObjectHideFlags: 0

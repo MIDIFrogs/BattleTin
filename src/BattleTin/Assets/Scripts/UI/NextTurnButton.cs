@@ -10,7 +10,6 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI
         private TurnControllerBase turnController;
         private Button button;
         
-        [SerializeField] private TMP_Text turnIndicator;
 
         private void Awake()
         {
@@ -22,7 +21,6 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI
             turnController.TurnFinished += s =>
             {
                 button.enabled = true;
-                turnIndicator.text = $"Turn #{turnController.TurnIndex}";
             };
         }
 
