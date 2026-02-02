@@ -19254,6 +19254,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1921560883317862803, guid: d0df07c61526f9a4d9e93320e7b7e622, type: 3}
+      propertyPath: piecePrefab
+      value: 
+      objectReference: {fileID: 8128570362055447588, guid: 185413c1fd33cfc4c9070a8e5554c454, type: 3}
     - target: {fileID: 1983970838659687112, guid: d0df07c61526f9a4d9e93320e7b7e622, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -19574,6 +19578,10 @@ PrefabInstance:
       propertyPath: turnAnimator
       value: 
       objectReference: {fileID: 900348292}
+    - target: {fileID: 8447965202438735567, guid: 634bb18ae0597884e813db7ef7cb2729, type: 3}
+      propertyPath: playerContext
+      value: 
+      objectReference: {fileID: 1260470905}
     - target: {fileID: 8447965202438735567, guid: 634bb18ae0597884e813db7ef7cb2729, type: 3}
       propertyPath: turnController
       value: 

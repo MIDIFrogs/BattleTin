@@ -57,6 +57,7 @@ namespace MIDIFrogs.BattleTin.UI.Assets.Scripts.UI
 
         private void OnPieceSelected(PieceView obj)
         {
+            if (obj == null) return;
             var piece = turnController.GameState.Pieces[obj.PieceId];
             switch (piece.Mask)
             {

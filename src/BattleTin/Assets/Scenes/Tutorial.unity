@@ -1747,6 +1747,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1208934420}
     - target: {fileID: 8447965202438735567, guid: 634bb18ae0597884e813db7ef7cb2729, type: 3}
+      propertyPath: playerContext
+      value: 
+      objectReference: {fileID: 1095502745}
+    - target: {fileID: 8447965202438735567, guid: 634bb18ae0597884e813db7ef7cb2729, type: 3}
       propertyPath: turnController
       value: 
       objectReference: {fileID: 1208934415}
